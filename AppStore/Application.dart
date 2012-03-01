@@ -1,6 +1,7 @@
 #library('application');
 #import('dart:json');
 #import('../events/GenericEvents.dart');
+#import('../commons/Commons.dart');
 
 
 /**
@@ -35,7 +36,7 @@ class Application {
 }
  
  class AppStatusMessage extends AppMessage<AppStatus> {
-   AppStatusMessage.load(String from, String to):super(from, to, new AppStatus('load'));
+   AppStatusMessage.loading(String from, String to):super(from, to, AppStatus.LOADING);
  }
  
  class RuleAppMessage {
@@ -43,44 +44,18 @@ class Application {
    RuleAppMessage([this._artifact]);
    String get artifact() =>  _artifact;
    
- }
- 
-class Key <T extends Hashable> implements Hashable {
-  final T _value;
-  const Key(T this._value);
-  
-  bool operator == (Object other) {
-    if(other != null && other is Key<T>) {
-      
-      return hashCode() == other.hashCode();
-    }
-    return false;
-  }
-  
-  int hashCode() {
-    return _value.hashCode();
-  }
-  
-  String toString() {
-    if(_value != null) {
-      return _value.toString();
-    }
-    return '';
-  }
-} 
+ } 
 
 class AppAction extends Key<String> {
   static final AppAction START = const AppAction._internal('start');
   static final AppAction CLOSE = const AppAction._internal('close');
   const AppAction._internal(String value):super(value);
 }
-
-
  
 class AppStatus extends Key<String> {
   static final AppStatus LOADING = const AppStatus._internal('loading');
-  static final AppStatus LOADED = const AppStatus._internal('app-loaded');
-  const AppStatus._internal(String this._status);
+  static final AppStatus LOADED = const AppStatus._internal('loaded');
+  const AppStatus._internal(String status) : super(status);
 
 }
 
