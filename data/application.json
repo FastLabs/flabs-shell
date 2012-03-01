@@ -1,0 +1,33 @@
+[
+    {
+        "description":"application structure",
+        "applications":[
+            {
+                "identifier":"Accounts",
+                "description":"Some text here",
+                "shortcut":"acc",
+                "launcher":{
+                    "url":"http://rules.com",
+                    "attributes":{
+                        "path":"/Rules/Common",
+                        "artifact":"Account"
+                    }
+                },
+                "tags":["Rules", "Accounts"]
+            },
+            {
+                "identifier":"User Administrator",
+                "description":"some text here",
+                "shortcut":"admin:users",
+                "launcher":{
+                    "url":"http://admin.com",
+                    "attributes":{
+                        "area":"users"
+                    }
+                },
+                "tags":["Admin", "Users"]
+            }
+        ]
+    }
+]
+    

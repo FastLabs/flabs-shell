@@ -1,0 +1,57 @@
+##### start rule engine application with the account as parameter
+
+Container listener initialized
+container notified {"application":"Rules","message":"loaded"}
+container received: {"application":"Rules","message":"loaded"}
+container sends {"id":"/Rules/Accounts","artifactPath":"Rules/Common","artifactName":"Account","location":"http://appstore.com/RulesManager.html"} to: Rules
+client received: {"id":"/Rules/Accounts","artifactPath":"Rules/Common","artifactName":"Account","location":"http://appstore.com/RulesManager.html"}
+container embeded application
+
+container notified {"application":"Rules","message":"processed"}
+container received: {"application":"Rules","message":"processed"}
+remove ->Rules
+
+
+
+##### start cps standalone application
+
+container embeded application
+init client messaging
+client messaging initialized
+container embeded application
+container notified {"application":"Pricing","message":"loaded"}
+container received: {"application":"Pricing","message":"loaded"}
+container sends {"id":"/Pricing","location":"http://appstore.com/PricingManager.html"} to: Pricing
+client received: {"id":"/Pricing","location":"http://appstore.com/PricingManager.html"}
+container notified {"application":"Pricing","message":"processed"}
+container received: {"application":"Pricing","message":"processed"}
+
+
+##### start coverage application
+
+container embeded application
+init client messaging
+client messaging initialized
+container embeded application
+container notified {"application":"Coverage Report","message":"loaded"}
+container received: {"application":"Coverage Report","message":"loaded"}
+container sends {"id":"/Coverage","location":"http://appstore.com/CoverageReport.html"} to: Coverage Report
+client received: {"id":"/Coverage","location":"http://appstore.com/CoverageReport.html"}
+container notified {"application":"Coverage Report","message":"processed"}
+container received: {"application":"Coverage Report","message":"processed"}
+
+##### from coverage start cps
+Coverage Report sends [{"key": "Rtek Product Type", "value": "FxCorrelationSwap"}] to Pricing
+container received: {"application":"Coverage Report","destination":"Pricing","payload":"[{\"key\": \"Rtek Product Type\", \"value\": \"FxCorrelationSwap\"}]","message":"route"}
+container sends {"status" : "suspend"} to: Coverage Report
+client received: {"status" : "suspend"}
+container embeded application
+init client messaging
+client messaging initialized
+container embeded application
+container notified {"application":"Pricing","message":"loaded"}
+container received: {"application":"Pricing","message":"loaded"}
+container sends {"id":"/Pricing","location":"http://appstore.com/PricingManager.html", "payload":[{"key": "Rtek Product Type", "value": "FxCorrelationSwap"}]} to: Pricing
+client received: {"id":"/Pricing","location":"http://appstore.com/PricingManager.html", "payload":[{"key": "Rtek Product Type", "value": "FxCorrelationSwap"}]}
+container notified {"application":"Pricing","message":"processed"}
+container received: {"application":"Pricing","message":"processed"}

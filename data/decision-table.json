@@ -1,0 +1,63 @@
+{
+    "name": "Equity Exposure Guidelines",
+    "columns" :[
+        {"column": "Aggregation Logic"},
+        {"column": "Country Status"},
+        {"column": "Region"},
+        {"column": "Country"},
+        {"column": "Root Symbol"},
+        {"column": "Fund"},
+        {"column": "Manager"},
+        {"column": "Strategy"},
+        {"column": "Sub-Strategy"},
+        {"column": "Symbol"},
+        {"column": "TXA", "type": "Equity Exposure"},
+        {"column": "JPA", "type": "Equity Exposure"}
+    ],
+    "rules": [
+        {
+            "identifier" : 1,
+            "description" : "a classic rule",
+            "criteria" : [
+                {"column": "Aggregation Logic", "operator": "is", "value": "Net"},
+                {"column": "Country Status", "operator": "is one of", "value": ["Developed", "Emerging"]},
+                {"column": "Region", "operator": "is", "value": "US & Canada"}
+            ],
+            "actions": [
+                {"column": "TXA", "operator" : "set", "value": "20%"},
+                {"column": "JPA", "operator" : "set", "value": "10%"}
+            ]
+
+        },
+        {
+            "identifier" : 2,
+            "description" : "second classic rule",
+            "criteria" : [
+                {"column": "Aggregation Logic", "operator": "is", "value": "Gross"},
+                {"column": "Country Status", "operator": "is one of", "value": ["Developed", "Emerging"]},
+                {"column": "Region", "operator": "is", "value": "US & Canada"}
+            ],
+            "actions": [
+                {"column": "TXA", "operator" : "set", "value": "11%"},
+                {"column": "JPA", "operator" : "set", "value": "1%"}
+            ]
+        },
+        {
+            "identifier" : 3,
+            "description" : "empty criteria rule",
+            "criteria" : [
+                {"column": "Aggregation Logic", "operator": "is", "value": "Gross"},
+                {"column": "Country Status", "operator": "is one of", "value": ["Developed", "Emerging"]},
+                {"column": "Region"}
+            ],
+            "actions": [
+                {"column": "TXA", "operator" : "set", "value": "11%"},
+                {"column": "JPA", "operator" : "set", "value": "1%"}
+            ]
+        }
+
+
+
+    ]
+
+}

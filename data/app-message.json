@@ -1,0 +1,14 @@
+{"description": "application post messages",
+    "messages": [
+        {"description": "sent from the app to the container when application is loaded first time",
+            "message" :{"app": "Rules", "status": "loaded"}
+        },
+        {"description": "sent from the container after the *loaded* event has been received ",
+            "message":{"path":"/Rules/Common", "artifact":"Account"}
+        },
+        {"description":"sent from the app to the container as result of the action request",
+            "TODO":"investigate if only status is ok and the sender information could be extracted from session frame",
+            "message":{"status":"processed"}
+        }
+    ]
+}
