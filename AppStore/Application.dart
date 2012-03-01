@@ -44,11 +44,6 @@ class Application {
    String get artifact() =>  _artifact;
    
  }
-
- final AppStatus LOADING = const AppStatus('app-loading');
- final AppStatus START = const AppStatus('app-start');
- final AppStatus LOADED = const AppStatus('app-loaded');
- final AppStatus CLOSE = const AppStatus('app-close');
  
 class Key <T extends Hashable> implements Hashable {
   final T _value;
