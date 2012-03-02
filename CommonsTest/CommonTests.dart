@@ -3,6 +3,7 @@
 #import('dart:html');
 #import('../commons/Commons.dart');
 #source('KeyTest.dart');
+#source('EventTest.dart');
 
 class CommonTests {
 

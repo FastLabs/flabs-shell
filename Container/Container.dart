@@ -1,7 +1,6 @@
 #library('contaoner');
-#import('../Events/GenericEvents.dart');
 #import('../AppStore/Application.dart');
-
+#import('../commons/Commons.dart');
 typedef AppEventHandler(ContainerEvent event);
 
 /**
@@ -16,41 +15,42 @@ typedef AppEventHandler(ContainerEvent event);
 */
 
 
-class ContainerEvent <T extends Hashable>extends TopicEvent <T> {
+abstract class ContainerEvent <T extends Hashable> extends TopicEvent <T> {
   ContainerEvent(T topic):super(topic); 
+  
 }
 
-
-class AppStatusEvent extends ContainerEvent <AppStatus>{
-  AppStatus _status;
+class AppStatusEvent extends ContainerEvent <String>{
   Application _app;
   
-  AppStatusEvent.loaded(Application this._app): super(LOADED);
-  AppStatusEvent.start(Application this._app): super(START);
-  AppStatusEvent.close(Application this._app): super(CLOSE);
+  AppStatusEvent.loaded(Application this._app): super(AppStatus.LOADED);
+  AppStatusEvent.start(Application this._app): super(AppAction.START);
+  AppStatusEvent.close(Application this._app): super(AppAction.CLOSE);
   
-  AppStatus get status() => topic;
-  Application get application() => _app;
+  Application get payload() => _app;
 }
 /**
 Encapsulates the events related to application container
 */
 class ContainerEvents {
-  TopicHandler<AppStatus, AppEventHandler> _handlers;
-  ContainerEvents () :_handlers = new TopicHandler();
+  TopicHandler<String, AppEventHandler> _actionHandlers;
+  TopicHandler<String, AppEventHandler> _statusHandlers;
+  
+  ContainerEvents () :_actionHandlers = new TopicHandler(),
+                      _statusHandlers = new TopicHandler();
   
   ContainerEvents appLoaded(AppEventHandler handler) {
-    _handlers.add(LOADED, handler);
+    _statusHandlers.add(AppStatus.LOADED, handler);
     return this;
   }
   
   ContainerEvents appStartRequest(AppEventHandler handler) {
-    _handlers.add(START, handler);
+    _actionHandlers.add(AppAction.START, handler);
     return this;
   }
   
   ContainerEvents appCloseRequest(AppEventHandler handler) {
-    _handlers.add(CLOSE, handler);
+    _actionHandlers.add(AppAction.CLOSE, handler);
     return this;
   }
 }
@@ -62,15 +62,16 @@ class ContainerMessageBus {
   ContainerMessageBus() : this._on = new ContainerEvents();
   
   void appLoaded(Application app) {
-      _on._handlers.dispatch(new AppStatusEvent.loaded(app));
+    _on._statusHandlers.dispatch(new AppStatusEvent.loaded(app));
+      
   }
   
   void requestAppStart(Application app) {
-    _on._handlers.dispatch(new AppStatusEvent.start(app));
+    _on._actionHandlers.dispatch(new AppStatusEvent.start(app));
   }
   
   void requestAppClose(Application app) {
-    _on._handlers.dispatch(new AppStatusEvent.close(app));
+    _on._actionHandlers.dispatch(new AppStatusEvent.close(app));
   }
   
   

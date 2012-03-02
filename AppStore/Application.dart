@@ -1,6 +1,5 @@
 #library('application');
 #import('dart:json');
-#import('../events/GenericEvents.dart');
 #import('../commons/Commons.dart');
 
 
@@ -30,7 +29,6 @@ class Application {
   String _from;
   String _to;
   T _payload;
-  
   AppMessage(String this._from, String this._to, T this._payload);
   
 }
@@ -38,26 +36,33 @@ class Application {
  class AppStatusMessage extends AppMessage<AppStatus> {
    AppStatusMessage.loading(String from, String to):super(from, to, AppStatus.LOADING);
  }
- 
- class RuleAppMessage {
-   String _artifact;
-   RuleAppMessage([this._artifact]);
-   String get artifact() =>  _artifact;
-   
- } 
+  
 
-class AppAction extends Key<String> {
-  static final AppAction START = const AppAction._internal('start');
-  static final AppAction CLOSE = const AppAction._internal('close');
-  const AppAction._internal(String value):super(value);
+interface AppAction  {
+  static final String START = 'start';
+  static final String CLOSE = 'close';
 }
  
-class AppStatus extends Key<String> {
-  static final AppStatus LOADING = const AppStatus._internal('loading');
-  static final AppStatus LOADED = const AppStatus._internal('loaded');
-  const AppStatus._internal(String status) : super(status);
-
+interface AppStatus  {
+  static final String LOADING = 'loading';
+  static final String LOADED = 'loaded';
 }
+
+class AppEventBus {
+  
+  void loading() {
+    
+  }
+  
+  void done() {
+    
+  }
+  
+  void loaded(){
+    
+  }
+}
+
 
 interface ManagesApplications default ApplicationManager {
   void startApplication(Application application);

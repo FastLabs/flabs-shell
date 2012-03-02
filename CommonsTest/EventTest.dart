@@ -1,10 +1,3 @@
-#import('dart:html');
-
-#import('../testing/dartest/dartest.dart');
-#import('../testing/unittest/unittest_dartest.dart');
-#import('../Events/GenericEvents.dart');
-
-
 class EventsTest {
 
   EventsTest() {
@@ -65,10 +58,4 @@ class TopicEventBusTest {
     
     
   }
-}
-
-void main() {
-  new EventsTest().run();
-  new TopicEventBusTest().run();
-  new DARTest().run();
 }
