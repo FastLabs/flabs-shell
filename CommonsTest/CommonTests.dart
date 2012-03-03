@@ -2,7 +2,7 @@
 #import('../testing/unittest/unittest_dartest.dart');
 #import('dart:html');
 #import('../commons/Commons.dart');
-#source('KeyTest.dart');
+
 #source('EventTest.dart');
 
 class CommonTests {
@@ -12,7 +12,7 @@ class CommonTests {
 
   void run() {
     write("Common libraries test");
-    new KeyTest().run();
+    new EventsTest().run();
   }
 
   void write(String message) {

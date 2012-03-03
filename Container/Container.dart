@@ -1,7 +1,8 @@
-#library('contaoner');
+#library('Container');
 #import('../AppStore/Application.dart');
 #import('../commons/Commons.dart');
 typedef AppEventHandler(ContainerEvent event);
+typedef AppRouteHandler(RouteMessageEvent event);
 
 /**
 - load application
@@ -15,19 +16,31 @@ typedef AppEventHandler(ContainerEvent event);
 */
 
 
-abstract class ContainerEvent <T extends Hashable> extends TopicEvent <T> {
+class ContainerEvent <T extends Hashable> extends TopicEvent <T> {
   ContainerEvent(T topic):super(topic); 
   
 }
-
+/**Message that delivers the status information to the container*/
 class AppStatusEvent extends ContainerEvent <String>{
   Application _app;
-  
   AppStatusEvent.loaded(Application this._app): super(AppStatus.LOADED);
   AppStatusEvent.start(Application this._app): super(AppAction.START);
   AppStatusEvent.close(Application this._app): super(AppAction.CLOSE);
   
-  Application get payload() => _app;
+  Application get application() => _app;
+}
+/**A message that contain routing information*/
+class RouteMessageEvent extends ContainerEvent<String> {
+  Application _source;
+  Application _destination;
+  String _payload;
+  
+  RouteMessageEvent(Application this._source, Application this._destination, String this._payload);
+  
+  String get payload() => _payload;
+  Application get source() => _source;
+  Application get destination() => _destination;
+  
 }
 /**
 Encapsulates the events related to application container
@@ -35,6 +48,7 @@ Encapsulates the events related to application container
 class ContainerEvents {
   TopicHandler<String, AppEventHandler> _actionHandlers;
   TopicHandler<String, AppEventHandler> _statusHandlers;
+  TopicHandler<String, AppRouteHandler> _routingHandlers;
   
   ContainerEvents () :_actionHandlers = new TopicHandler(),
                       _statusHandlers = new TopicHandler();
@@ -42,6 +56,10 @@ class ContainerEvents {
   ContainerEvents appLoaded(AppEventHandler handler) {
     _statusHandlers.add(AppStatus.LOADED, handler);
     return this;
+  }
+  
+  ContainerEvents route(AppRouteHandler handler) {
+    _routingHandlers.add(AppAction.ROUTE, handler);
   }
   
   ContainerEvents appStartRequest(AppEventHandler handler) {
@@ -66,14 +84,17 @@ class ContainerMessageBus {
       
   }
   
+  void routeMessage(Application from, Application to, String payload) {
+    _on._routingHandlers.dispatch(new RouteMessageEvent(from, to, payload));
+  }
+  
   void requestAppStart(Application app) {
     _on._actionHandlers.dispatch(new AppStatusEvent.start(app));
   }
   
   void requestAppClose(Application app) {
     _on._actionHandlers.dispatch(new AppStatusEvent.close(app));
-  }
-  
+  } 
   
   ContainerEvents get on() =>_on;
 }

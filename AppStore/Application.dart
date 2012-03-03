@@ -41,6 +41,7 @@ class Application {
 interface AppAction  {
   static final String START = 'start';
   static final String CLOSE = 'close';
+  static final String ROUTE = 'route';
 }
  
 interface AppStatus  {
