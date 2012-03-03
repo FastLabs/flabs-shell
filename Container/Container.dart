@@ -35,7 +35,7 @@ class RouteMessageEvent extends ContainerEvent<String> {
   Application _destination;
   String _payload;
   
-  RouteMessageEvent(Application this._source, Application this._destination, String this._payload);
+  RouteMessageEvent(Application this._source, Application this._destination, [String this._payload]): super(AppAction.ROUTE);
   
   String get payload() => _payload;
   Application get source() => _source;
@@ -51,7 +51,8 @@ class ContainerEvents {
   TopicHandler<String, AppRouteHandler> _routingHandlers;
   
   ContainerEvents () :_actionHandlers = new TopicHandler(),
-                      _statusHandlers = new TopicHandler();
+                      _statusHandlers = new TopicHandler(),
+                      _routingHandlers = new TopicHandler();
   
   ContainerEvents appLoaded(AppEventHandler handler) {
     _statusHandlers.add(AppStatus.LOADED, handler);
@@ -84,7 +85,7 @@ class ContainerMessageBus {
       
   }
   
-  void routeMessage(Application from, Application to, String payload) {
+  void routeMessage(Application from, Application to,[ String payload]) {
     _on._routingHandlers.dispatch(new RouteMessageEvent(from, to, payload));
   }
   

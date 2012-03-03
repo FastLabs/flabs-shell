@@ -60,7 +60,9 @@ class TopicEvent <T extends Hashable> {
   TopicEvent (this._topic);
   T get topic() => _topic;
 }
-
+//TODO: I need to think how i can remove a handler from the topic
+//TODO: check the blog where the callback is treated as future
+//TODO: possible when the class as function posibility will be included i will be able to implement this
 class TopicHandler <K extends Hashable, T extends Function> {
   
   Map <K, List<T>> _topics;

@@ -46,9 +46,40 @@ class ContainerTest {
       eventBus.requestAppStart(new Application('Cps'));
     });
     
-    test('route message action', () {
+    
+    group('message routing' , () {
       
-      Expect.isTrue(true);
+      Application rulesApp = new Application('Rules');
+      Application adminApp = new Application('Admin');
+      
+      
+      test('route message action', () {
+        ContainerMessageBus eventBus = new ContainerMessageBus();
+        eventBus.on.route((RouteMessageEvent event) {
+          Expect.isNotNull(event);
+          Expect.isNotNull(event.source);
+          Expect.isNotNull(event.destination);
+          Expect.isNotNull(event.source.name);
+          Expect.isNotNull(event.destination.name);
+          Expect.equals('Rules', event.source.name);
+          Expect.equals('Admin', event.destination.name);
+          Expect.isNotNull(event.payload);
+          Expect.equals('Hello from rules', event.payload);
+      });
+      eventBus.routeMessage(rulesApp, adminApp, 'Hello from rules');
+    });
+    
+    test('route empty payload action', () {
+      ContainerMessageBus eventBus = new ContainerMessageBus();
+      eventBus.on.route((RouteMessageEvent event) {
+        Expect.isNotNull(event);
+        Expect.isNotNull(event.source);
+        Expect.isNotNull(event.destination);
+        Expect.isNull(event.payload);
+        });
+      eventBus.routeMessage(rulesApp, adminApp);
+       });
+    
     });
     
   }
