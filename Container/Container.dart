@@ -61,6 +61,7 @@ class ContainerEvents {
   
   ContainerEvents route(AppRouteHandler handler) {
     _routingHandlers.add(AppAction.ROUTE, handler);
+    return this;
   }
   
   ContainerEvents appStartRequest(AppEventHandler handler) {

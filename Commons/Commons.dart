@@ -78,7 +78,12 @@ class TopicHandler <K extends Hashable, T extends Function> {
       }
     }
   }
-
+  
+  void remove(K topic) {
+    if(topic != null) {
+      _topics.remove(key);
+    }
+  }
   
   void add(K topic, T listener) {
     var listeners = _topics[topic];
