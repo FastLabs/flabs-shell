@@ -7,7 +7,7 @@ typedef AppRouteHandler(RouteMessageEvent event);
 /**
 - load application
 - close application
-- suspend application: in case when we swithc the application context
+- suspend application: in case when we switch the application context
 - resume application
 - load in progress 
 - task in progress
@@ -20,15 +20,16 @@ class ContainerEvent <T extends Hashable> extends TopicEvent <T> {
   ContainerEvent(T topic):super(topic); 
   
 }
+
 /**Message that delivers the status information to the container*/
 class AppStatusEvent extends ContainerEvent <String>{
   Application _app;
   AppStatusEvent.loaded(Application this._app): super(AppStatus.LOADED);
   AppStatusEvent.start(Application this._app): super(AppAction.START);
   AppStatusEvent.close(Application this._app): super(AppAction.CLOSE);
-  
   Application get application() => _app;
 }
+
 /**A message that contain routing information*/
 class RouteMessageEvent extends ContainerEvent<String> {
   Application _source;
@@ -49,28 +50,28 @@ class ContainerEvents {
   TopicHandler<String, AppEventHandler> _actionHandlers;
   TopicHandler<String, AppEventHandler> _statusHandlers;
   TopicHandler<String, AppRouteHandler> _routingHandlers;
-  
+  HandlerRegistration handlerRegistration;
   ContainerEvents () :_actionHandlers = new TopicHandler(),
                       _statusHandlers = new TopicHandler(),
                       _routingHandlers = new TopicHandler();
   
   ContainerEvents appLoaded(AppEventHandler handler) {
-    _statusHandlers.add(AppStatus.LOADED, handler);
+    this.handlerRegistration = _statusHandlers.add(AppStatus.LOADED, handler);
     return this;
   }
   
   ContainerEvents route(AppRouteHandler handler) {
-    _routingHandlers.add(AppAction.ROUTE, handler);
+    this.handlerRegistration =_routingHandlers.add(AppAction.ROUTE, handler);
     return this;
   }
   
   ContainerEvents appStartRequest(AppEventHandler handler) {
-    _actionHandlers.add(AppAction.START, handler);
+    this.handlerRegistration =_actionHandlers.add(AppAction.START, handler);
     return this;
   }
   
   ContainerEvents appCloseRequest(AppEventHandler handler) {
-    _actionHandlers.add(AppAction.CLOSE, handler);
+    this.handlerRegistration = _actionHandlers.add(AppAction.CLOSE, handler);
     return this;
   }
 }

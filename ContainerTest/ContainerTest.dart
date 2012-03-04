@@ -82,6 +82,64 @@ class ContainerTest {
     
     });
     
+    group('handler registration', () {
+      test('obtain handler registration', () {
+        ContainerMessageBus eventBus = new ContainerMessageBus();
+        eventBus.on.appCloseRequest((event){
+          Expect.isNotNull(event);    
+        });
+        
+        Expect.isNotNull(eventBus.on.handlerRegistration);
+        eventBus.requestAppClose(new Application('rules'));
+      });
+      
+     test('remove handler', () {
+       ContainerMessageBus eventBus = new ContainerMessageBus();
+       bool received = false;
+       HandlerRegistration registration = eventBus.on.appCloseRequest((even ) {
+         received = true;
+       }).handlerRegistration;
+       
+      registration.remove();
+       eventBus.requestAppClose(new Application('Rules'));
+       Expect.isFalse(received);   
+     }); 
+     
+     test('test multiple handlers ', () {
+      ContainerMessageBus eventBus = new ContainerMessageBus();
+      int eventCount = 0;
+      HandlerRegistration appLoadedHandlerregistration = eventBus.on.appLoaded((event) {
+        Expect.isNotNull(event);
+        eventCount++;
+      }).handlerRegistration;
+      
+      HandlerRegistration appStartRequestHandler = eventBus.on.appStartRequest((event) {
+        Expect.isNotNull(event);
+        eventCount++;
+      }).handlerRegistration;
+      
+      
+      eventBus.appLoaded(new Application('rules'));
+      eventBus.requestAppStart(new Application('admin'));
+      
+      Expect.equals(2, eventCount);
+      eventBus.appLoaded(new Application('roles'));
+      Expect.equals(3, eventCount);
+      appLoadedHandlerregistration.remove();
+      eventBus.appLoaded(new Application('users'));
+      Expect.equals(3, eventCount);
+      
+      eventBus.requestAppStart(new Application('pricing'));
+      Expect.equals(4, eventCount);
+      appStartRequestHandler.remove();
+      eventBus.requestAppStart(new Application('pricing'));
+      Expect.equals(4, eventCount);
+      
+     });
+      
+      
+    });
+    
   }
   
   

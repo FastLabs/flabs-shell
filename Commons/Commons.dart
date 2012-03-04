@@ -60,6 +60,29 @@ class TopicEvent <T extends Hashable> {
   TopicEvent (this._topic);
   T get topic() => _topic;
 }
+
+interface HandleRegistration<T> default _HandlerRegister<T> {
+  HandleRegistration(T handler, List<T> handlerContainer);
+  void remove();
+}
+
+class _HandlerRegister <T> implements HandleRegistration {
+  T _handler;
+  List<T> _handlerContainer;
+  _HandlerRegister(T this._handler, List<T> this._handlerContainer);
+  void remove () {
+    if(_handlerContainer != null) {
+    {
+      int handleIndex = _handlerContainer.indexOf(_handler);
+      if(handleIndex >= 0) {
+        _handlerContainer.removeRange(handleIndex, 1);
+        }
+      }
+    }
+    
+  }
+  
+}
 //TODO: I need to think how i can remove a handler from the topic
 //TODO: check the blog where the callback is treated as future
 //TODO: possible when the class as function posibility will be included i will be able to implement this
@@ -85,7 +108,7 @@ class TopicHandler <K extends Hashable, T extends Function> {
     }
   }
   
-  void add(K topic, T listener) {
+  HandleRegistration<T> add(K topic, T listener) {
     var listeners = _topics[topic];
     if(listeners == null) {
       listeners = [];
@@ -93,6 +116,7 @@ class TopicHandler <K extends Hashable, T extends Function> {
     }
     
     listeners.add(listener);
+    return new HandleRegistration<T>(listener, listeners);
   }
 }
 
