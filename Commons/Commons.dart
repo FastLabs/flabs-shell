@@ -24,11 +24,16 @@ interface EventSet {
   EventSet remove(GenericEventListener handler) {
     _handlers.removeRange(_handlers.indexOf(handler), 1);
   }
+  
+  void dispatch(GenericEvent event) {
+    
+  }
 }
  
  interface SimpleEvents default SimpleEventsImpl {
    SimpleEvents();
    EventSet genericEvent();
+   
  }
  
  class SimpleEventsImpl implements SimpleEvents {
@@ -43,7 +48,7 @@ interface EventSet {
  }
 
 class SimpleEventBus  {
-  SimpleEvents _on;
+  SimpleEventsImpl _on;
   
   SimpleEventBus():this._on = new SimpleEvents();
   
@@ -66,10 +71,47 @@ interface HandleRegistration<T> default _HandlerRegister<T> {
   void remove();
 }
 
-interface Taggable <T> {
+interface Taggable <T> default TagContainer <T>{
   void tagIt(T tag);
   bool isTagged(T tag);
   void removeTag(T tag);
+}
+
+class TagContainer<T> implements Taggable<T> {
+  List<T> _tags;
+  
+  void tagIt(T tag) {
+    if(_tags ==  null) {
+      _tags = [];
+    }
+    _tags.add(tag);
+  }
+  
+  void removeTag(T tag) {
+    if(_tags != null && tag != null) {
+      int index = _tags.indexOf(tag);
+      if(index >= 0) {
+        _tags.removeRange(index, 1);
+      }
+    }
+  }
+  
+  bool isTagged(T isTag) {
+    if(_tags != null && isTag != null) {
+      return _tags.some((tag) => isTag == tag );
+    }
+    return false;
+  }
+}
+//TODO: not sure if this is required
+interface Unwrapable <T> {
+  Map<String, Object> unwrapInstance(T object);
+  List<Map<String, Object>> unwrapList(List<T> objects);
+}
+//TODO: not sure if this is required
+interface Wrapable <T> {
+  T wrapInstance(Map<String, Object> properties);
+  List<T> wrapList(List<Map<String, Object>> collection);
 }
 
 class _HandlerRegister <T> implements HandleRegistration {
@@ -110,7 +152,7 @@ class TopicHandler <K extends Hashable, T extends Function> {
   
   void remove(K topic) {
     if(topic != null) {
-      _topics.remove(key);
+      _topics.remove(topic);
     }
   }
   

@@ -27,19 +27,29 @@ class AppInstanceTest {
       Expect.isNotNull(ruleAppBroadcaster);       
       */
     });
-  group('tag application', () {
+    
+  group('tag the application: ', () {
     
     test(' check tag exists', () {
       Application app = new Application('Rules');
       app.tagIt('engine');
-      Expect.isTrue(app.hasTag('engine'));
+      Expect.isTrue(app.isTagged('engine'));
       
     });
     
     test('tag does not exist', () {
       Application app = new Application('Rules');
       app.tagIt('engine');
-      Expect.isFalse(app.hasTag('admin'));
+      Expect.isFalse(app.isTagged('admin'));
+    });
+    
+    test('un-tag the application', () {
+      Application app = new Application('Rules');
+      app.tagIt('engine');
+      Expect.isTrue(app.isTagged('engine'));
+      app.removeTag('engine');
+      Expect.isFalse(app.isTagged('engine'));
+      
     });
     
   });

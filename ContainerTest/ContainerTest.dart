@@ -3,7 +3,7 @@
 #import ('../testing/unittest/unittest_dartest.dart');
 #import('../Container/Container.dart');
 #import('../AppStore/Application.dart');
-
+#import('../commons/Commons.dart');
 class ContainerTest {
 
   ContainerTest() {
@@ -96,7 +96,7 @@ class ContainerTest {
      test('remove handler', () {
        ContainerMessageBus eventBus = new ContainerMessageBus();
        bool received = false;
-       HandlerRegistration registration = eventBus.on.appCloseRequest((even ) {
+       HandleRegistration registration = eventBus.on.appCloseRequest((even ) {
          received = true;
        }).handlerRegistration;
        
@@ -108,12 +108,12 @@ class ContainerTest {
      test('test multiple handlers ', () {
       ContainerMessageBus eventBus = new ContainerMessageBus();
       int eventCount = 0;
-      HandlerRegistration appLoadedHandlerregistration = eventBus.on.appLoaded((event) {
+      HandleRegistration appLoadedHandlerregistration = eventBus.on.appLoaded((event) {
         Expect.isNotNull(event);
         eventCount++;
       }).handlerRegistration;
       
-      HandlerRegistration appStartRequestHandler = eventBus.on.appStartRequest((event) {
+      HandleRegistration appStartRequestHandler = eventBus.on.appStartRequest((event) {
         Expect.isNotNull(event);
         eventCount++;
       }).handlerRegistration;

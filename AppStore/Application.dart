@@ -2,19 +2,16 @@
 #import('dart:json');
 #import('../commons/Commons.dart');
 
-
-
-
 /**
-* I imutable class that incapsulates the infromation about a application
+*  Incapsulates the infromation about a application
 */
-class Application {
+class Application implements Taggable <String> {
   String _name;
   String _description;
-  List<String> _tags;  //tagable is a common functionality, check if this could be extracted and generalized 
+  TagContainer<String> _tags; 
   Map<String, String> _parameters; // not sure if this is required, mai be required to store genric info such as icon, help info, 
   //but may be better if this will have separte attributes in the class as i cannot see now to have many of such parameters
-  
+  AppLauncher _launcher;
   Application(this._name) {}
   
   Application._fromMap(Map<String, String> values) {
@@ -27,22 +24,42 @@ class Application {
   String operator [] (String name) => _parameters[name];
   
   void tagIt(String tag){
-    if(_tags ==  null) {
-      _tags = [];
-    }
-    _tags.add(tag);
-  }
-  void removeTag(String tag) {
-    
+   if(_tags == null) {
+     _tags = new TagContainer();
+   }
+   _tags.tagIt(tag);
   }
   
-  bool hasTag(String hasTag) {
+  void removeTag(String tag) {
     if(_tags != null) {
-      return _tags.some((tag)=> tag == hasTag) ;
+      _tags.removeTag(tag);
+    }
+  }
+  
+  bool isTagged(String hasTag) {
+    if(_tags != null) {
+      return _tags.isTagged(hasTag);
     }
     return false;
   }
 }
+
+Application wrapApp(Map<String, Object> data) {
+  
+  Application app = new Application();
+  app._name = data['name'];
+  Map launcher = data['launcher'];
+  if(launcher == null) {
+    app._launcher  = wrapLauncher(launcher);
+  }
+}
+
+AppLauncher wrapLauncher(Map<String, Object> data) {
+  
+}
+
+
+
 //TODO: must decide if the launcher is only url related or is the
 // abstraction used for a particular application with its start parameters: url, shortcut and attributes
 
@@ -52,7 +69,7 @@ class AppLauncher {
   String get url() => _url;
   Map<String, String> _attributes; 
   String shortcut;
-  AppLauncher ([this._url]);
+  AppLauncher (this._url);
   
   String operator [] (String attrName) => _attributes != null? attributes[attrName]: null;
     

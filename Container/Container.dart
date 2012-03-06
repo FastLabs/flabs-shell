@@ -50,7 +50,7 @@ class ContainerEvents {
   TopicHandler<String, AppEventHandler> _actionHandlers;
   TopicHandler<String, AppEventHandler> _statusHandlers;
   TopicHandler<String, AppRouteHandler> _routingHandlers;
-  HandlerRegistration handlerRegistration;
+  HandleRegistration handlerRegistration;
   ContainerEvents () :_actionHandlers = new TopicHandler(),
                       _statusHandlers = new TopicHandler(),
                       _routingHandlers = new TopicHandler();
