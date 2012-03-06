@@ -66,6 +66,12 @@ interface HandleRegistration<T> default _HandlerRegister<T> {
   void remove();
 }
 
+interface Taggable <T> {
+  void tagIt(T tag);
+  bool isTagged(T tag);
+  void removeTag(T tag);
+}
+
 class _HandlerRegister <T> implements HandleRegistration {
   T _handler;
   List<T> _handlerContainer;

@@ -27,6 +27,22 @@ class AppInstanceTest {
       Expect.isNotNull(ruleAppBroadcaster);       
       */
     });
+  group('tag application', () {
+    
+    test(' check tag exists', () {
+      Application app = new Application('Rules');
+      app.tagIt('engine');
+      Expect.isTrue(app.hasTag('engine'));
+      
+    });
+    
+    test('tag does not exist', () {
+      Application app = new Application('Rules');
+      app.tagIt('engine');
+      Expect.isFalse(app.hasTag('admin'));
+    });
+    
+  });
     
     test('broadcasting messages',  () {
       /*Application application = new Application('Rules');

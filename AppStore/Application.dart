@@ -3,26 +3,59 @@
 #import('../commons/Commons.dart');
 
 
+
+
 /**
 * I imutable class that incapsulates the infromation about a application
 */
 class Application {
   String _name;
-  String _url;
+  String _description;
+  List<String> _tags;  //tagable is a common functionality, check if this could be extracted and generalized 
+  Map<String, String> _parameters; // not sure if this is required, mai be required to store genric info such as icon, help info, 
+  //but may be better if this will have separte attributes in the class as i cannot see now to have many of such parameters
   
-  Map<String, String> _parameters;
-  
-  Application(this._name, [this._url]) {}
+  Application(this._name) {}
   
   Application._fromMap(Map<String, String> values) {
     _name = values['name'];
-    _url = values['url'];
-  }
+    _description = values['description'];
+   }
   
   String get name() => _name;
-  String get url() => _url;
   
   String operator [] (String name) => _parameters[name];
+  
+  void tagIt(String tag){
+    if(_tags ==  null) {
+      _tags = [];
+    }
+    _tags.add(tag);
+  }
+  void removeTag(String tag) {
+    
+  }
+  
+  bool hasTag(String hasTag) {
+    if(_tags != null) {
+      return _tags.some((tag)=> tag == hasTag) ;
+    }
+    return false;
+  }
+}
+//TODO: must decide if the launcher is only url related or is the
+// abstraction used for a particular application with its start parameters: url, shortcut and attributes
+
+// launcher may represent only the url, and attributes are application specific?
+class AppLauncher {
+  String _url;
+  String get url() => _url;
+  Map<String, String> _attributes; 
+  String shortcut;
+  AppLauncher ([this._url]);
+  
+  String operator [] (String attrName) => _attributes != null? attributes[attrName]: null;
+    
 }
 
  class AppMessage <T>{
