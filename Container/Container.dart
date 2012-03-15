@@ -3,6 +3,7 @@
 #import('../commons/Commons.dart');
 typedef AppEventHandler(ContainerEvent event);
 typedef AppRouteHandler(RouteMessageEvent event);
+typedef AppRepositoryHandler(AppRepositoryEvent event);
 
 /**
 - load application
@@ -30,6 +31,13 @@ class AppStatusEvent extends ContainerEvent <String>{
   Application get application() => _app;
 }
 
+class AppRepositoryEvent extends ContainerEvent<String> {
+  List<Application> _apps;
+  
+  AppRepositoryEvent.loaded(List<Application> this._apps):super('REPOSITORY_LOADED');
+  List<Application> get apps() => _apps;
+}
+
 /**A message that contain routing information*/
 class RouteMessageEvent extends ContainerEvent<String> {
   Application _source;
@@ -50,13 +58,20 @@ class ContainerEvents {
   TopicHandler<String, AppEventHandler> _actionHandlers;
   TopicHandler<String, AppEventHandler> _statusHandlers;
   TopicHandler<String, AppRouteHandler> _routingHandlers;
+  TopicHandler<String, AppRepositoryHandler> _appRepoHandler;
   HandleRegistration handlerRegistration;
+  
   ContainerEvents () :_actionHandlers = new TopicHandler(),
                       _statusHandlers = new TopicHandler(),
-                      _routingHandlers = new TopicHandler();
+                      _routingHandlers = new TopicHandler(),
+                      _appRepoHandler = new TopicHandler();
   
   ContainerEvents appLoaded(AppEventHandler handler) {
     this.handlerRegistration = _statusHandlers.add(AppStatus.LOADED, handler);
+    return this;
+  }
+  ContainerEvents appRepositoryLoaded(AppRepositoryHandler handler) {
+    this.handlerRegistration = _appRepoHandler.add('REPOSITORY_LOADED', handler);
     return this;
   }
   
@@ -85,6 +100,10 @@ class ContainerMessageBus {
   void appLoaded(Application app) {
     _on._statusHandlers.dispatch(new AppStatusEvent.loaded(app));
       
+  }
+  
+  void appRepositoryProvided(List<Application> apps) {
+    _on._appRepoHandler.dispatch(new AppRepositoryEvent.loaded(apps));
   }
   
   void routeMessage(Application from, Application to,[ String payload]) {

@@ -19,7 +19,7 @@ void main() {
 document.query('#status').innerHTML = 'loaded';
   
   new AppInstanceTest().run();
-  
+  new AppRepositoryTest().run();
   
   new DARTest().run();
   

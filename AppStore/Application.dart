@@ -7,19 +7,15 @@
 */
 class Application implements Taggable <String> {
   String _name;
-  String _description;
+  String description;
   TagContainer<String> _tags; 
   Map<String, String> _parameters; // not sure if this is required, mai be required to store genric info such as icon, help info, 
   //but may be better if this will have separte attributes in the class as i cannot see now to have many of such parameters
   AppLauncher _launcher;
   Application(this._name) {}
   
-  Application._fromMap(Map<String, String> values) {
-    _name = values['name'];
-    _description = values['description'];
-   }
-  
   String get name() => _name;
+  AppLauncher get launcher() => _launcher;
   
   String operator [] (String name) => _parameters[name];
   
@@ -44,19 +40,6 @@ class Application implements Taggable <String> {
   }
 }
 
-Application wrapApp(Map<String, Object> data) {
-  
-  Application app = new Application();
-  app._name = data['name'];
-  Map launcher = data['launcher'];
-  if(launcher == null) {
-    app._launcher  = wrapLauncher(launcher);
-  }
-}
-
-AppLauncher wrapLauncher(Map<String, Object> data) {
-  
-}
 
 
 
@@ -69,9 +52,10 @@ class AppLauncher {
   String get url() => _url;
   Map<String, String> _attributes; 
   String shortcut;
+  
   AppLauncher (this._url);
   
-  String operator [] (String attrName) => _attributes != null? attributes[attrName]: null;
+  String operator [] (String attrName) => _attributes != null? _attributes[attrName]: null;
     
 }
 
@@ -126,21 +110,35 @@ class ApplicationRepository implements Iterator<Application> {
   
   ApplicationRepository():this.applications = [];
   
-  ApplicationRepository.fromJson(String json) {
-    
+  ApplicationRepository.fromJson(String json):this.applications = [] {
     List applicationList = JSON.parse(json);
-    applicationList.forEach((map)=>_fromMap(map));
-    
-    for(var applicationMap in applicationList) {
-      Application  application = new Application._fromMap(applicationMap);
-      print(application.name);
-    }
-    
+    applicationList.forEach((map)=>_appFromMap(map));   
   }
   
-  void _fromMap(Map fields) {
+  void addApplication (Application app) {
+    this.applications.add(app);
+  }
+  
+  void _appFromMap(Map fields) {
    Application app = new Application(fields['name']);
+   app.description = fields['description'];
+   var launcherFields = fields['launcher'];
+   if(launcherFields != null) {
+     app._launcher = _launcherFromMap(launcherFields);
+   }
    applications.add(app);
+  }
+  
+  AppLauncher _launcherFromMap(Map fields) {
+    var url = fields['url'];
+    if(url != null) {
+      AppLauncher launcher = new AppLauncher(url);
+      launcher.shortcut = fields['shortcut'];
+      launcher._attributes = fields['attributes'];
+      return launcher;
+    }
+    return null;
+    
   }
   
   bool hasNext() {
