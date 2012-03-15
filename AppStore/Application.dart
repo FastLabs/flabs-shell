@@ -83,7 +83,7 @@ class AppLauncher {
   
 }
  
- class AppStatusMessage extends AppMessage<AppStatus> {
+ class AppStatusMessage extends AppMessage<String> {
    AppStatusMessage.loading(String from, String to):super(from, to, AppStatus.LOADING);
  }
   
@@ -122,15 +122,25 @@ interface ManagesApplications default ApplicationManager {
 }
 
 class ApplicationRepository implements Iterator<Application> {
+  List<Application> applications;
+  
+  ApplicationRepository():this.applications = [];
   
   ApplicationRepository.fromJson(String json) {
     
-    var applicationList = JSON.parse(json);
+    List applicationList = JSON.parse(json);
+    applicationList.forEach((map)=>_fromMap(map));
+    
     for(var applicationMap in applicationList) {
       Application  application = new Application._fromMap(applicationMap);
       print(application.name);
     }
     
+  }
+  
+  void _fromMap(Map fields) {
+   Application app = new Application(fields['name']);
+   applications.add(app);
   }
   
   bool hasNext() {
