@@ -140,15 +140,21 @@ class ContainerTest {
       
     });
     
-    group('app repository events', () {
-      test('', () {
-      ApplicationRepository repository = new ApplicationRepository.fromJson('[{"name":"rules"}]');
-      ContainerMessageBus eventBus = new ContainerMessageBus();
+    group('app repository', () {
+      ApplicationRepository repository = new ApplicationRepository.fromJson('[{"name":"rules"}, '
+        '{"name": "admin"}]');
+      test('app repository as collection', () {
+       Expect.isNotNull(repository[0]);
+       Expect.isNotNull(repository[1]);
+      });
+      
+      test('app repository events', () {
+        ContainerMessageBus eventBus = new ContainerMessageBus();
       eventBus.on.appRepositoryLoaded((appEvent) {
         Expect.isNotNull(appEvent.apps[0]);
         Expect.equals('rules', appEvent.apps[0].name);
       });
-      eventBus.appRepositoryProvided(repository.applications);
+      eventBus.appRepositoryProvided(repository);
       });
     });
     

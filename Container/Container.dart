@@ -32,10 +32,10 @@ class AppStatusEvent extends ContainerEvent <String>{
 }
 
 class AppRepositoryEvent extends ContainerEvent<String> {
-  List<Application> _apps;
+  Collection<Application> _apps;
   
-  AppRepositoryEvent.loaded(List<Application> this._apps):super('REPOSITORY_LOADED');
-  List<Application> get apps() => _apps;
+  AppRepositoryEvent.loaded(Collection<Application> this._apps):super('REPOSITORY_LOADED');
+  Collection<Application> get apps() => _apps;
 }
 
 /**A message that contain routing information*/
@@ -102,7 +102,7 @@ class ContainerMessageBus {
       
   }
   
-  void appRepositoryProvided(List<Application> apps) {
+  void appRepositoryProvided(Collection<Application> apps) {
     _on._appRepoHandler.dispatch(new AppRepositoryEvent.loaded(apps));
   }
   

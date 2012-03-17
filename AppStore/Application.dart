@@ -105,18 +105,18 @@ interface ManagesApplications default ApplicationManager {
   AppStatus queryAppStatus(Application application);
 }
 
-class ApplicationRepository implements Iterator<Application> {
-  List<Application> applications;
+class ApplicationRepository implements Collection<Application> {
+  List<Application> _applications;
   
-  ApplicationRepository():this.applications = [];
+  ApplicationRepository():this._applications = [];
   
-  ApplicationRepository.fromJson(String json):this.applications = [] {
+  ApplicationRepository.fromJson(String json):this._applications = [] {
     List applicationList = JSON.parse(json);
     applicationList.forEach((map)=>_appFromMap(map));   
   }
   
   void addApplication (Application app) {
-    this.applications.add(app);
+    this._applications.add(app);
   }
   
   void _appFromMap(Map fields) {
@@ -126,7 +126,7 @@ class ApplicationRepository implements Iterator<Application> {
    if(launcherFields != null) {
      app._launcher = _launcherFromMap(launcherFields);
    }
-   applications.add(app);
+   _applications.add(app);
   }
   
   AppLauncher _launcherFromMap(Map fields) {
@@ -141,16 +141,24 @@ class ApplicationRepository implements Iterator<Application> {
     
   }
   
-  bool hasNext() {
-    return true;
-  }
-  Application next(){
-    return null;
+  int get length() {
+    if(_applications != null) {
+      return _applications.length;
+    }
+    return 0;
   }
   
-  Application operator [] (String name) {
-    return null;
-  }
+  bool isEmpty() => this.length == 0;
+  bool some(bool f(Application app)) => _applications.some(f);
+  bool every(bool f(Application app)) => _applications.every(f);
+  Collection <Application> filter(bool f(Application app)) => _applications.filter(f);
+  Collection map(f(Application app)) => _applications.map(f);
+  
+  void forEach(void f(Application app)) => _applications.forEach(f);
+  Iterator <Application> iterator()=>_applications.iterator();
+  
+  Application operator [] (int position) => _applications[position];
+  
 }
 
  
