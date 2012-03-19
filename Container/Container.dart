@@ -16,12 +16,6 @@ typedef AppRepositoryHandler(AppRepositoryEvent event);
 - task done
 */
 
-
-class ContainerEvent <T extends Hashable> extends TopicEvent <T> {
-  ContainerEvent(T topic):super(topic); 
-  
-}
-
 /**Message that delivers the status information to the container*/
 class AppStatusEvent extends ContainerEvent <String>{
   Application _app;

@@ -192,3 +192,9 @@ class TopicEventBus <T> {
   
   TopicEvents get on() => _on;
 }
+
+
+class ContainerEvent <T extends Hashable> extends TopicEvent <T> {
+  const ContainerEvent(T topic):super(topic); 
+  
+}
