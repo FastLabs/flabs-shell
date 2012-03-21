@@ -76,6 +76,9 @@ interface AppAction  {
   static final String START = 'start';
   static final String CLOSE = 'close';
   static final String ROUTE = 'route';
+  static final String SUSPEND = 'suspend';
+  static final String RESUME = 'resume';
+  static final String INIT = 'init';
 }
  
 interface AppStatus  {
@@ -213,5 +216,33 @@ class ApplicationManager {
   AppStatus queryAppStatus(Application application) {
     print('application ${application.name} has status ...');
   }
-  
 }
+
+/**Message that delivers the status information to the container*/
+
+//TODO: separate the status messages from the command messages
+class AppStatusEvent extends ContainerEvent <String>{
+  
+  final Application _app;
+  
+  
+  const AppStatusEvent.loaded(Application this._app): super(AppStatus.LOADED);
+  const AppStatusEvent.loading(Application this._app): super(AppStatus.LOADING);
+  Application get app() => _app;
+  String get status() => topic;
+}
+
+class AppCommandEvent extends ContainerEvent<String> {
+  
+  final Application _app;
+  const AppCommandEvent.suspend(Application this._app): super(AppAction.SUSPEND);
+  const AppCommandEvent.resume(Application this._app): super(AppAction.RESUME);
+  const AppCommandEvent.init(Application this._app): super(AppAction.INIT);
+  const AppCommandEvent.start(Application this._app): super(AppAction.START);
+  const AppCommandEvent.close(Application this._app): super(AppAction.CLOSE);
+  
+  String get command() => topic;
+  Application get app() => _app;
+}
+
+

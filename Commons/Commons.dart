@@ -61,8 +61,8 @@ class SimpleEventBus  {
 }
 
 class TopicEvent <T extends Hashable> {
-  T _topic;
-  TopicEvent (this._topic);
+  final T _topic;
+  const TopicEvent (this._topic);
   T get topic() => _topic;
 }
 
@@ -198,3 +198,4 @@ class ContainerEvent <T extends Hashable> extends TopicEvent <T> {
   const ContainerEvent(T topic):super(topic); 
   
 }
+

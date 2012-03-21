@@ -16,14 +16,7 @@ typedef AppRepositoryHandler(AppRepositoryEvent event);
 - task done
 */
 
-/**Message that delivers the status information to the container*/
-class AppStatusEvent extends ContainerEvent <String>{
-  Application _app;
-  AppStatusEvent.loaded(Application this._app): super(AppStatus.LOADED);
-  AppStatusEvent.start(Application this._app): super(AppAction.START);
-  AppStatusEvent.close(Application this._app): super(AppAction.CLOSE);
-  Application get application() => _app;
-}
+
 
 class AppRepositoryEvent extends ContainerEvent<String> {
   Collection<Application> _apps;
@@ -105,11 +98,11 @@ class ContainerMessageBus {
   }
   
   void requestAppStart(Application app) {
-    _on._actionHandlers.dispatch(new AppStatusEvent.start(app));
+    _on._actionHandlers.dispatch(const AppCommandEvent.start(app));
   }
   
   void requestAppClose(Application app) {
-    _on._actionHandlers.dispatch(new AppStatusEvent.close(app));
+    _on._actionHandlers.dispatch(const AppCommandEvent.close(app));
   } 
   
   ContainerEvents get on() =>_on;

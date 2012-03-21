@@ -2,8 +2,11 @@
 #import ('../testing/dartest/dartest.dart');
 #import ('../testing/unittest/unittest_dartest.dart');
 #import('../AppStore/Application.dart');
+#import('../AppStore/Gadgetized.dart');
+#import('../commons/Commons.dart');
 #source('ApplicationRepository.dart');
 #source('AppInstance.dart');
+#source('GadgetizedTest.dart');
 
 void main() {
  /* TableElement table = new Element.tag('table');
@@ -20,6 +23,7 @@ document.query('#status').innerHTML = 'loaded';
   
   new AppInstanceTest().run();
   new AppRepositoryTest().run();
+  new GadgetizedTest().run();
   
   new DARTest().run();
   

@@ -1,19 +1,9 @@
 #library('gadgetized');
 #import('Application.dart');
-#import('../Commons/Commons.dart');
+#import('../commons/Commons.dart');
 
-typedef void GadgetEventHandler(CommandEvent event);
+typedef void GadgetEventHandler(AppCommandEvent event);
 typedef void ContainerMessageHandler(ContainerMessage message);
-
-class CommandEvent extends ContainerEvent<String> {
-  static final String EVENT_PORT = 'GADGET_COMMAND_PART';
-  final String _command;
-  const CommandEvent.suspend():super(EVENT_PORT), this._command = 'suspend';
-  const CommandEvent.resume():super(EVENT_PORT), this._command = 'resume';
-  const CommandEvent.init():super(EVENT_PORT), this._command = 'init';
-  
-  String get command() => _command;
-}
 
 class ContainerMessage extends ContainerEvent <String> {
   static final String EVENT_PORT = 'CONTAINER_MESSAGE_PORT';
@@ -36,7 +26,7 @@ class GadgetEvents {
     HandleRegistration handlerRegistration;
     
     GadgetEvents suspendAppRequest(GadgetEventHandler handler) {
-      this.handlerRegistration = _containerCommandHandler.add(CommandEvent.EVENT_PORT, handler);
+      this.handlerRegistration = _containerCommandHandler.add(AppAction.SUSPEND, handler);
       return this;
     }
     
@@ -47,18 +37,22 @@ class GadgetEvents {
 } 
 
 class GadgetEventBus {
-  GadgetEvents _on;
-  Application _app;
-  GadgetEventBus(this._app);
+  final GadgetEvents _on;
+  final Application _app;
+  
+  const GadgetEventBus(this._app): this._on = new GadgetEvents();
   
   void appResumed() {
-    
-    _on._containerCommandHandler.dispatch();
+    _on._containerCommandHandler.dispatch(new AppCommandEvent.resume(_app));
     
   }
   
   void appLoaded() {
-    
+    _on._containerCommandHandler.dispatch(new AppCommandEvent.suspend(_app));
+  }
+  
+  void appSuspended() {
+    _on._containerCommandHandler.dispatch(new  AppCommandEvent.suspend(_app));
   }
   
   GadgetEvents get on() => _on;

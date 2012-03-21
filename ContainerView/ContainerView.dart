@@ -10,7 +10,7 @@ class ContainerView {
   ContainerView():
     _messageBus = new ContainerMessageBus() {
     _messageBus.on.appStartRequest((AppStatusEvent event) {
-      write('Application started: ${event.application.name}');
+      write('Application started: ${event.app.name}');
     });
   }
 
