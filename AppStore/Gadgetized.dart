@@ -4,6 +4,7 @@
 
 typedef void GadgetEventHandler(AppCommandEvent event);
 typedef void ContainerMessageHandler(ContainerMessage message);
+typedef  void  MessageHandler<T>(T message); 
 
 class ContainerMessage extends ContainerEvent <String> {
   static final String EVENT_PORT = 'CONTAINER_MESSAGE_PORT';
@@ -13,12 +14,10 @@ class ContainerMessage extends ContainerEvent <String> {
 }
 
 
-class GadgetEvents {
-  
+ class GadgetEvents <T extends GadgetMessageEvent>{
     TopicHandler<String, GadgetEventHandler> _containerCommandHandler;
     TopicHandler<String, ContainerMessageHandler> _containerMessageHandler;
-    
-    
+
     GadgetEvents (): 
       _containerCommandHandler = new TopicHandler(),
       _containerMessageHandler = new TopicHandler();
@@ -30,21 +29,37 @@ class GadgetEvents {
       return this;
     }
     
+    GadgetEvents closeAppRequest(GadgetEventHandler handler) {
+      this.handlerRegistration = _containerCommandHandler.add(AppAction.CLOSE, handler);
+      return this;
+    }
+    
+    GadgetEvents resumeAppRequest(GadgetEventHandler handler) {
+      this.handlerRegistration = _containerCommandHandler.add(AppAction.RESUME, handler);
+      return this;
+    }
+    
     GadgetEvents containerMessage(ContainerMessageHandler handler) {
       this.handlerRegistration = _containerMessageHandler.add(ContainerMessage.EVENT_PORT, handler);
       return this;
     }
+    
+   // abstract Y message(MessageHandler<T> handler);
 } 
 
-class GadgetEventBus {
-  final GadgetEvents _on;
+class GadgetEventBus <T extends GadgetEvents>{
+  final T _on;
   final Application _app;
   
-  const GadgetEventBus(this._app): this._on = new GadgetEvents();
+  const GadgetEventBus(T this._on, Application this._app);
   
   void appResumed() {
     _on._containerCommandHandler.dispatch(new AppCommandEvent.resume(_app));
     
+  }
+  
+  void appClosed() {
+    _on._containerCommandHandler.dispatch(new AppCommandEvent.close(_app));
   }
   
   void appLoaded() {
@@ -54,6 +69,15 @@ class GadgetEventBus {
   void appSuspended() {
     _on._containerCommandHandler.dispatch(new  AppCommandEvent.suspend(_app));
   }
-  
-  GadgetEvents get on() => _on;
+  T get on() => _on;
 }
+
+class GadgetMessageEvent <T> extends ContainerEvent <String> {
+  
+  static final String MESSAGE_PORT = 'MESSAGE_PORT';
+  T _payload;
+  
+  GadgetMessageEvent([this._payload]):super(MESSAGE_PORT);
+  T get payload()=> _payload;
+}
+

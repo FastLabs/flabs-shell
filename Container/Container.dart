@@ -25,19 +25,7 @@ class AppRepositoryEvent extends ContainerEvent<String> {
   Collection<Application> get apps() => _apps;
 }
 
-/**A message that contain routing information*/
-class RouteMessageEvent extends ContainerEvent<String> {
-  Application _source;
-  Application _destination;
-  String _payload;
-  
-  RouteMessageEvent(Application this._source, Application this._destination, [String this._payload]): super(AppAction.ROUTE);
-  
-  String get payload() => _payload;
-  Application get source() => _source;
-  Application get destination() => _destination;
-  
-}
+
 /**
 Encapsulates the events related to application container
 */

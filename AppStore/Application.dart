@@ -225,7 +225,6 @@ class AppStatusEvent extends ContainerEvent <String>{
   
   final Application _app;
   
-  
   const AppStatusEvent.loaded(Application this._app): super(AppStatus.LOADED);
   const AppStatusEvent.loading(Application this._app): super(AppStatus.LOADING);
   Application get app() => _app;
@@ -243,6 +242,20 @@ class AppCommandEvent extends ContainerEvent<String> {
   
   String get command() => topic;
   Application get app() => _app;
+}
+
+/**A message that contain routing information*/
+class RouteMessageEvent extends ContainerEvent<String> {
+  Application _source;
+  Application _destination;
+  String _payload;
+  
+  RouteMessageEvent(Application this._source, Application this._destination, [String this._payload]): super(AppAction.ROUTE);
+  
+  String get payload() => _payload;
+  Application get source() => _source;
+  Application get destination() => _destination;
+  
 }
 
 
