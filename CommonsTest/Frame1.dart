@@ -1,4 +1,6 @@
 #import('dart:html');
+
+//TODO: here I will define the message handler class that extends the gadget event bus
 class Frame1 {
   
 }

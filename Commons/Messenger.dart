@@ -1,15 +1,21 @@
 #library('messenger');
 #import('dart:html');
+#import('dart:json');
 
-class MessageHandler {
-  void handle();
-}
+typedef DataHandler(Map map);
 
 class Messenger {
-  void sendMessage() {
-    IFrameElement element = document.query('#frame1');
-    IFrameElement element2 = document.query('#frame2');    
-    element.contentWindow.postMessage('Hello', '*');
-    element2.contentWindow.postMessage('Hello1', '*');
-  }  
+
+  void sendMessage(String destination, String content) {
+    IFrameElement element = document.query(destination);
+    element.contentWindow.postMessage(content, '*');
+  }
+
+  
+  void listen(DataHAndler handler) {
+    window.on.message.add((MessageEvent event) {
+      Map parsed = JSON.parse(content);
+      handler(parsed);
+    });
+  }
 }

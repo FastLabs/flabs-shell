@@ -4,7 +4,8 @@
 
 typedef void GadgetEventHandler(AppCommandEvent event);
 typedef void ContainerMessageHandler(ContainerMessage message);
-typedef  void  MessageHandler<T>(T message); 
+typedef void MessageHandler<T>(T message); 
+typedef void AppStatusHandler(AppStatusEvent event);
 
 class ContainerMessage extends ContainerEvent <String> {
   static final String EVENT_PORT = 'CONTAINER_MESSAGE_PORT';
@@ -17,15 +18,27 @@ class ContainerMessage extends ContainerEvent <String> {
  class GadgetEvents <T extends GadgetMessageEvent>{
     TopicHandler<String, GadgetEventHandler> _containerCommandHandler;
     TopicHandler<String, ContainerMessageHandler> _containerMessageHandler;
+    TopicHandler<String, AppStatusHandler> _statusMessageHandler;
 
     GadgetEvents (): 
       _containerCommandHandler = new TopicHandler(),
-      _containerMessageHandler = new TopicHandler();
+      _containerMessageHandler = new TopicHandler(),
+      _statusMessageHandler = new TopicHandler();
     
     HandleRegistration handlerRegistration;
     
     GadgetEvents suspendAppRequest(GadgetEventHandler handler) {
       this.handlerRegistration = _containerCommandHandler.add(AppAction.SUSPEND, handler);
+      return this;
+    }
+    
+    GadgetEvents appLoaded(AppStatusHandler handler) {
+      this.handlerRegistration = _statusMessageHandler.add(AppStatus.LOADED, handler);
+      return this;
+    }
+    
+    GadgetEvents requestProcessed(AppStatusHandler handler) {
+      this.handlerRegistration = _statusMessageHandler.add(AppStatus.PROCESSED, handler);
       return this;
     }
     
@@ -52,6 +65,7 @@ class GadgetEventBus <T extends GadgetEvents>{
   final Application _app;
   
   const GadgetEventBus(T this._on, Application this._app);
+
   
   void appResumed() {
     _on._containerCommandHandler.dispatch(new AppCommandEvent.resume(_app));
@@ -63,7 +77,7 @@ class GadgetEventBus <T extends GadgetEvents>{
   }
   
   void appLoaded() {
-    _on._containerCommandHandler.dispatch(new AppCommandEvent.suspend(_app));
+    _on._statusMessageHandler.dispatch(new AppStatusEvent.loaded(_app));
   }
   
   void appSuspended() {

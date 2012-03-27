@@ -84,6 +84,7 @@ interface AppAction  {
 interface AppStatus  {
   static final String LOADING = 'loading';
   static final String LOADED = 'loaded';
+  static final String PROCESSED = 'processed';
 }
 
 class AppEventBus {
@@ -227,8 +228,16 @@ class AppStatusEvent extends ContainerEvent <String>{
   
   const AppStatusEvent.loaded(Application this._app): super(AppStatus.LOADED);
   const AppStatusEvent.loading(Application this._app): super(AppStatus.LOADING);
+  const AppStatusEvent.processed(Application this._app): super(AppStatus.PROCESSED);
+  
   Application get app() => _app;
   String get status() => topic;
+  Map fields() {
+    Map data = {};
+    data['app'] = app.name; 
+    data['status'] = status;
+    return data;
+  }
 }
 
 class AppCommandEvent extends ContainerEvent<String> {
