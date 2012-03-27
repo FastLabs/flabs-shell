@@ -1,7 +1,7 @@
 class SimpleMessageEvent extends GadgetMessageEvent<String> {
   SimpleMessageEvent(payload):super(payload);
 }
-// demo classa of a gadget specific event handler
+// demo class of a gadget specific event handler
 class SimpleGadgetEvents extends GadgetEvents <SimpleMessageEvent> {
   TopicHandler <String, MessageHandler<SimpleMessageEvent>> _simpleMessageHandlers;
   

@@ -3,6 +3,8 @@
 #import('dart:html');
 #import('dart:json');
 #import('../commons/Commons.dart');
+#import('../commons/Messenger.dart');
+#source('MessengerTest.dart');
 
 #source('EventTest.dart');
 #source('JSONSerilizerTest.dart');
@@ -15,6 +17,7 @@ class CommonTests {
   void run() {
     write("Common libraries test");
     new EventsTest().run();
+    
   }
 
   void write(String message) {
@@ -26,5 +29,6 @@ void main() {
   //new CommonTests().run();
   new JSONSerilizerTest().run();
   new DARTest().run();
+  new MessengerTest().run();
   
 }
