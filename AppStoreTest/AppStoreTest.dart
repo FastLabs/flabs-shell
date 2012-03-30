@@ -4,9 +4,14 @@
 #import('../AppStore/Application.dart');
 #import('../AppStore/Gadgetized.dart');
 #import('../commons/Commons.dart');
+#import('../AppStore/MessageHandler.dart');
+#import('../commons/Messenger.dart');
+#import('../container/Container.dart');
 #source('ApplicationRepository.dart');
 #source('AppInstance.dart');
 #source('GadgetizedTest.dart');
+#source('SimpleGadget.dart');
+#source('AppMessengerTest.dart');
 
 void main() {
  /* TableElement table = new Element.tag('table');
@@ -24,7 +29,7 @@ document.query('#status').innerHTML = 'loaded';
   new AppInstanceTest().run();
   new AppRepositoryTest().run();
   new GadgetizedTest().run();
-  
+  new AppMessengerTest().run();
   new DARTest().run();
   
  /* ApplicationManager appManager = new ApplicationManager();

@@ -95,3 +95,7 @@ class ContainerMessageBus {
   
   ContainerEvents get on() =>_on;
 }
+//TODO: this should be implemented
+class ContainerMessageHandler {
+  
+}

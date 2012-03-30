@@ -5,7 +5,7 @@ class MessengerTest {
     
     String message = '{"status": "loaded", "application" : "rules"'
       '}';
-    m.sendMessage('#frame2', message);
-    print('done');
+    //m.sendMessage('#frame2', message);
+    //print('done');
   }
 }

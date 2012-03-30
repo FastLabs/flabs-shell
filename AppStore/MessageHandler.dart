@@ -1,7 +1,9 @@
+#library ('app message handler');
 #import('Gadgetized.dart');
 #import('../Commons/Messenger.dart');
 #import('Application.dart');
 #import('dart:json');
+
 //TODO: I think this should go in the application library
 class InitAppHandler {
   void handle() {
@@ -21,24 +23,30 @@ class SuspendAppHandler {
   }
 }
 
-class GadgetMessageHandler <T extends GadgetEvents>{
+//TODO: an abstraction should be built on top fo a Message handler
+// this is required due of diffferences how the container and gadget handles messages and 
+
+class GadgetMessageHandler <T extends GadgetEvents> {
   GadgetEventBus<T> _eventBus;
   Messenger _messenger;
   
-  GadgetMessageHandler(this._eventBus):this._messenger = new Messenger() {
+  AppStatusHandler _statusHandler;
+  
+  GadgetMessageHandler.usingMessenger(GadgetEventBus<T> eventBus, Messenger messenger): this(eventBus, messenger);
+  GadgetMessageHandler.usingWindowMessenger(GadgetEventBus<T> eventBus): this(eventBus, new Messenger());
+  
+  GadgetMessageHandler(this._eventBus, this._messenger) {
     _messenger.listen((Map map) {
       handle(map);
     });
     
-    _eventBus.on.appLoaded((AppStatusEvent event) {
-      //TODO: work on container reference
-      _messenger.sendMessage('container', JSON.stringify(event.fields()));
-    });
-    
-    _eventBus.on.requestProcessed((AppStatusEvent event) {
-      //TODO: work on the container reference
-      _messenger.sendMessage('container', JSON.stringify(event.fields()));
-    });
+    //TODO: when the lazy field initialization will be available move this at the declaration level
+    _statusHandler =  (AppStatusEvent event) {
+      _messenger.sendContainerMessage(JSON.stringify(event.fields()));
+    };
+ 
+    _eventBus.on.appLoaded(_statusHandler); 
+    _eventBus.on.requestProcessed(_statusHandler);
   }
   
   void handle(Map messageAttributes) {

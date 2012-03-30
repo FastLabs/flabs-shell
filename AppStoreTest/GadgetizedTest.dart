@@ -1,28 +1,3 @@
-class SimpleMessageEvent extends GadgetMessageEvent<String> {
-  SimpleMessageEvent(payload):super(payload);
-}
-// demo class of a gadget specific event handler
-class SimpleGadgetEvents extends GadgetEvents <SimpleMessageEvent> {
-  TopicHandler <String, MessageHandler<SimpleMessageEvent>> _simpleMessageHandlers;
-  
-  SimpleGadgetEvents () : this._simpleMessageHandlers = new TopicHandler();
-  
-  SimpleGadgetEvents message(MessageHandler<SimpleMessageEvent> handler) {
-    this.handlerRegistration = _simpleMessageHandlers.add(GadgetMessageEvent.MESSAGE_PORT, handler);
-    return this;
-  }
-}
-
-class SimpleGadgetEventBus extends GadgetEventBus<SimpleGadgetEvents> {
-  
-  SimpleGadgetEventBus(Application app):super(new SimpleGadgetEvents(), app);
-  
-  void dispatchMessage(SimpleMessageEvent message) {
-    on._simpleMessageHandlers.dispatch(message);
-  }
-  
-}
-
 //test suite
 class GadgetizedTest {  
   void run() {
