@@ -34,11 +34,11 @@ class GadgetMessageProcessor <T extends GadgetEvents>  extends MessageProcessor 
   void handle(Map messageAttributes) {
     String action = messageAttributes['action'];
     if(action != null) {
-      if(action == 'resume') {
-        _eventBus.appResumed();
-      } else if(action == 'suspend') {
-        _eventBus.appSuspended();
+      switch(action) {
+            case AppAction.RESUME : _eventBus.appResumed(); break;
+            case AppAction.SUSPEND : _eventBus.appSuspended(); break;
       }
+      
       if(messageAttributes.containsKey('payload')) {
         //TODO: parse the content
         //TODO: if the action is init then the message should have payload
