@@ -9,7 +9,7 @@ class AppMessengerTest {
       repository.add(new Application('rules'));
       repository.add(new Application('admin'));
       SimpleMessenger messenger = new SimpleMessenger(repository, containerMessageBus);
-      GadgetMessageHandler <SimpleGadgetEvents> messageHandler = new GadgetMessageHandler(eventBus, messenger); 
+      GadgetMessageProcessor <SimpleGadgetEvents> messageHandler = new GadgetMessageProcessor(eventBus, messenger); 
      
       test('receiving resume message', () {
         bool processed = false;

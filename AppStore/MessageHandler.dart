@@ -8,16 +8,16 @@
 // this is required due of diffferences how the container and gadget handles messages and 
 
 
-class GadgetMessageHandler <T extends GadgetEvents>  extends MessageProcessor {
+class GadgetMessageProcessor <T extends GadgetEvents>  extends MessageProcessor {
   GadgetEventBus<T> _eventBus;
   Messenger _messenger;
   
   AppStatusHandler _statusHandler;
   
-  GadgetMessageHandler.usingMessenger(GadgetEventBus<T> eventBus, Messenger messenger): this(eventBus, messenger);
-  GadgetMessageHandler.usingWindowMessenger(GadgetEventBus<T> eventBus): this(eventBus, new Messenger());
+  GadgetMessageProcessor.usingMessenger(GadgetEventBus<T> eventBus, Messenger messenger): this(eventBus, messenger);
+  GadgetMessageProcessor.usingWindowMessenger(GadgetEventBus<T> eventBus): this(eventBus, new Messenger());
   
-  GadgetMessageHandler(this._eventBus, this._messenger) {
+  GadgetMessageProcessor(this._eventBus, this._messenger) {
     _messenger.listen((Map map) {
       handle(map);
     });
