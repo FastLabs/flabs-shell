@@ -30,17 +30,18 @@ class SimpleMessenger implements Messenger {
   
   DataHandler mockHandler;
   
-  GadgetMessageHandler<ContainerEvent> _serverMessageHandler;
+  ContainerMessageProcessor _containerMessageHandler;
   
-  SimpleMessenger(ContainerMessageBus containerMessageBus): this._serverMessageHandler = new GadgetMessageHandler<ContainerMessageBus>(containerMessageBus);
+  SimpleMessenger(ApplicationRepository repository, ContainerMessageBus containerMessageBus):
+    this._containerMessageHandler = new ContainerMessageProcessor(repository ,containerMessageBus);
   
   
   void sendAppMessage(String destination) {
     print(destination);
   }
   void sendContainerMessage(String content) {
-    print(content);
-   // Expect.fail('Not yet implemented');
+    Map data = JSON.parse(content);
+    _containerMessageHandler.handle(data);
   }
   void listen(DataHandler handler) {
     this.mockHandler = handler;

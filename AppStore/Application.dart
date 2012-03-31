@@ -102,7 +102,7 @@ class AppEventBus {
   }
 }
 
-
+/* container level application managemend*/
 interface ManagesApplications default ApplicationManager {
   void startApplication(Application application);
   void closeApplication(Application application);
@@ -119,7 +119,7 @@ class ApplicationRepository implements Collection<Application> {
     applicationList.forEach((map)=>_appFromMap(map));   
   }
   
-  void addApplication (Application app) {
+  void add (Application app) {
     this._applications.add(app);
   }
   
@@ -161,8 +161,19 @@ class ApplicationRepository implements Collection<Application> {
   void forEach(void f(Application app)) => _applications.forEach(f);
   Iterator <Application> iterator()=>_applications.iterator();
   
-  Application operator [] (int position) => _applications[position];
-  
+  Application operator [] (var id) { 
+    if(id is int) {
+     return _applications[id];
+    } else {
+      for(var app in _applications) {
+        if(app.name == id) {
+          return app;
+        }
+      }
+      
+    }
+    return null;
+  }
 }
 
  

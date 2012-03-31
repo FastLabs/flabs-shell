@@ -1,4 +1,5 @@
 #import('dart:html');
+#import('dart:json');
 #import ('../testing/dartest/dartest.dart');
 #import ('../testing/unittest/unittest_dartest.dart');
 #import('../AppStore/Application.dart');

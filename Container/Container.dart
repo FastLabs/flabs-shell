@@ -1,6 +1,7 @@
 #library('Container');
 #import('../AppStore/Application.dart');
 #import('../commons/Commons.dart');
+#import('../commons/Messenger.dart');
 typedef AppEventHandler(ContainerEvent event);
 typedef AppRouteHandler(RouteMessageEvent event);
 typedef AppRepositoryHandler(AppRepositoryEvent event);
@@ -66,7 +67,7 @@ class ContainerEvents {
   }
 }
 
-
+//TODO: probably I should rename this to Event bus as message is used to comunicate between windows and applications
 class ContainerMessageBus {
   ContainerEvents _on;
   
@@ -95,7 +96,40 @@ class ContainerMessageBus {
   
   ContainerEvents get on() =>_on;
 }
+
+
 //TODO: this should be implemented
-class ContainerMessageHandler {
+class ContainerMessageProcessor extends MessageProcessor {
+  ContainerMessageBus _containerMessageBus;
+  ApplicationRepository _repository;
   
+  
+  ContainerMessageProcessor(ApplicationRepository this._repository, ContainerMessageBus this._containerMessageBus) {
+    //here should be defined the handlers that will send messages to applications such as : init, route...
+    //_containerMessageBus.on.appLoaded(handler)
+  }
+  //TODO: have a look at the switch statement in order to improve status handling
+  void handle(Map message) {
+    var status = message['status'];
+    var action = message['action'];
+    
+    var app = _repository[message['name']];
+    if(app != null && status != null ) {
+      if(status == 'loaded') {
+        _containerMessageBus.appLoaded(app);
+      } else if(action == 'route' ) {
+        //TODO: this is wrong but added here just to elaborate the logic of message handling
+        var destination = message['destination'];
+        if(destination != null) {
+          var destApp = _repository[message[destination]];
+          var payload = message['payload'];
+          if(destApp != null) {
+            _containerMessageBus.routeMessage(app, destApp, payload);
+          } else {
+            throw 'Application ${destination} is unavailable in repository';
+          }
+        }
+      }
+    }
+  }
 }

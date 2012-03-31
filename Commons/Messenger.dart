@@ -5,6 +5,10 @@
 
 typedef DataHandler(Map map);
 
+ class MessageProcessor {
+  abstract void handle(Map messageAttributes);
+}
+
 interface Messenger default WindowMessenger {
   void sendAppMessage(String destination);
   void sendContainerMessage(String content);

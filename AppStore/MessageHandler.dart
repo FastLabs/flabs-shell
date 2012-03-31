@@ -4,29 +4,11 @@
 #import('Application.dart');
 #import('dart:json');
 
-//TODO: I think this should go in the application library
-class InitAppHandler {
-  void handle() {
-    
-  }
-}
-
-class ResumeAppHandler {
-  void handle() {
-    
-  }
-}
-
-class SuspendAppHandler {
-  void handle() {
-    
-  }
-}
-
 //TODO: an abstraction should be built on top fo a Message handler
 // this is required due of diffferences how the container and gadget handles messages and 
 
-class GadgetMessageHandler <T extends GadgetEvents> {
+
+class GadgetMessageHandler <T extends GadgetEvents>  extends MessageProcessor {
   GadgetEventBus<T> _eventBus;
   Messenger _messenger;
   
@@ -48,7 +30,7 @@ class GadgetMessageHandler <T extends GadgetEvents> {
     _eventBus.on.appLoaded(_statusHandler); 
     _eventBus.on.requestProcessed(_statusHandler);
   }
-  
+  //TODO: have a look at the switch statement in order to improve the action handling
   void handle(Map messageAttributes) {
     String action = messageAttributes['action'];
     if(action != null) {
