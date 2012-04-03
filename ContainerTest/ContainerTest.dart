@@ -36,6 +36,7 @@ class ContainerTest {
     test('start-app action ', () {
       ContainerMessageBus eventBus = new ContainerMessageBus();
       eventBus.on.appStartRequest((appEvent){
+        Expect.isTrue(appEvent is AppCommandEvent);
         Expect.isNotNull(appEvent);
         Expect.isNotNull(appEvent.topic);
         Expect.equals(AppAction.START, appEvent.topic); 

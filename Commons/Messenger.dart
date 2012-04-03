@@ -2,7 +2,6 @@
 #import('dart:html');
 #import('dart:json');
 
-
 typedef DataHandler(Map map);
 
  class MessageProcessor {

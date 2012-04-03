@@ -85,6 +85,7 @@ interface AppStatus  {
   static final String LOADING = 'loading';
   static final String LOADED = 'loaded';
   static final String PROCESSED = 'processed';
+  static final String ERROR = 'error';
 }
 
 class AppEventBus {
@@ -100,13 +101,6 @@ class AppEventBus {
   void loaded(){
     
   }
-}
-
-/* container level application managemend*/
-interface ManagesApplications default ApplicationManager {
-  void startApplication(Application application);
-  void closeApplication(Application application);
-  AppStatus queryAppStatus(Application application);
 }
 
 class ApplicationRepository implements Collection<Application> {
@@ -215,20 +209,7 @@ class AppMessageBroadcaster <T> implements MessageBroadcaster<T>{
   //AppBroadcasterEvents get() =>_on;
 }
 
-class ApplicationManager {
-  
-  void startApplication(Application application) {
-    print('application ${application.name} started');
-  }
-  
-  void closeApplication(Application application) {
-    print('application ${application.name} stoped');
-  }
-  
-  AppStatus queryAppStatus(Application application) {
-    print('application ${application.name} has status ...');
-  }
-}
+
 
 /**Message that delivers the status information to the container*/
 

@@ -35,7 +35,7 @@ class AppMessengerTest {
         Expect.isTrue(processed);
       });
       
-      test('send message to container', () {
+      test('send loaded message to container', () {
         bool processed = false;
         containerMessageBus.on.appLoaded((handler){
           Expect.equals('rules', handler.app.name);
@@ -44,6 +44,10 @@ class AppMessengerTest {
         
        messenger.sendContainerMessage('{"name":"rules", "status":"loaded" }');
        Expect.isTrue(processed);
+      });
+      
+      test('send ' , () {
+        
       });
     });
     
