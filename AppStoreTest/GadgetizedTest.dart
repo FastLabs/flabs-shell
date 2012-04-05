@@ -3,7 +3,8 @@ class GadgetizedTest {
   void run() {
     group('gatdet', () {
       Application app = new Application('Rules');
-      SimpleGadgetEventBus eventBus = new SimpleGadgetEventBus(app);
+      AppSession session = new AppSession('unu', app);
+      SimpleGadgetEventBus eventBus = new SimpleGadgetEventBus(session);
       
       test('suspend application', () {
         Expect.isNotNull(eventBus);
@@ -11,7 +12,7 @@ class GadgetizedTest {
        HandleRegistration handle = eventBus.on.suspendAppRequest((AppCommandEvent event){
           processed = true;
           Expect.equals('suspend',event.command);
-          Expect.equals('Rules', event.app.name);
+          Expect.equals('Rules', event.session.app.name);
          // Expect.isFalse(true);
         }).handlerRegistration;
         eventBus.appSuspended();
@@ -24,7 +25,7 @@ class GadgetizedTest {
         bool processed = false;
         HandleRegistration handle = eventBus.on.resumeAppRequest((AppCommandEvent event) {
           processed = true;
-          Expect.equals('Rules', event.app.name);
+          Expect.equals('Rules', event.session.app.name);
         }).handlerRegistration;
         
         eventBus.appResumed();
@@ -39,7 +40,7 @@ class GadgetizedTest {
         
         HandleRegistration handle = eventBus.on.closeAppRequest((AppCommandEvent event) {
           processed = true;
-          Expect.equals('Rules', event.app.name);
+          Expect.equals('Rules', event.session.app.name);
         }).handlerRegistration;
         eventBus.appClosed();
         Expect.isTrue(processed);

@@ -17,7 +17,7 @@ class GadgetMessageProcessor <T extends GadgetEvents>  extends MessageProcessor 
   GadgetMessageProcessor.usingMessenger(GadgetEventBus<T> eventBus, Messenger messenger): this(eventBus, messenger);
   GadgetMessageProcessor.usingWindowMessenger(GadgetEventBus<T> eventBus): this(eventBus, new Messenger());
   
-  GadgetMessageProcessor(this._eventBus, this._messenger) {
+  GadgetMessageProcessor(this._eventBus, Messenger this._messenger) {
     _messenger.listen((Map map) {
       handle(map);
     });

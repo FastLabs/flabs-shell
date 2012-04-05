@@ -9,16 +9,15 @@ interface ManagesApplications default ApplicationManager {
 
 class SessionManager {
   ContainerMessageBus _containerMessageBus;
-  AppContainerView _view;
   
   Map<String, List<AppSession>> _sessions;
   
-  SessionManager(ContainerMessageBus this._containerMessageBus, AppContainerView this._view): _sessions = {} {
+  SessionManager(ContainerMessageBus this._containerMessageBus): _sessions = {} {
     
-    _containerMessageBus.on.appStartRequest((AppCommandEvent event) {
-      AppSession session = _registerAppSession(event.app);
+    /*_containerMessageBus.on.appStartRequest((AppCommandEvent event) {
+      AppSession session = _registerAppSession(event.session);
         this._view.openApp(session);
-      });
+      });*/
     }
   
   List<AppSession> getSessions (String appId) {
@@ -41,16 +40,16 @@ class SessionManager {
 //TODO: application should work with app session so to close an applicaiton i must have session information
 class ApplicationManager {
   ContainerMessageBus _containerMessageBus;
+  SessionManager _sessionManager;
   
-  ApplicationManager(ContainerMessageBus this._containerMessageBus);  
+  ApplicationManager(ContainerMessageBus this._containerMessageBus, SessionManager this._sessionManager);  
   
   void startAppInstance(Application app) {
-    _containerMessageBus.requestAppStart(app);
+    _containerMessageBus.appStartRequested(_sessionManager._registerAppSession(app));
   }
   
   
   void closeAppInstance(AppSession appInstance) {
-    
-    //_containerMessageBus.requestAppClose(app);
+    _containerMessageBus.requestAppClose(appInstance);
   }
 }

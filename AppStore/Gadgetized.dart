@@ -62,26 +62,26 @@ class ContainerMessage extends ContainerEvent <String> {
 
 class GadgetEventBus <T extends GadgetEvents>{
   final T _on;
-  final Application _app;
+  final AppSession _session;
   
-  const GadgetEventBus(T this._on, Application this._app);
+  const GadgetEventBus(T this._on, AppSession this._session);
 
   
   void appResumed() {
-    _on._containerCommandHandler.dispatch(new AppCommandEvent.resume(_app));
+    _on._containerCommandHandler.dispatch(new AppCommandEvent.resume(_session));
     
   }
   
   void appClosed() {
-    _on._containerCommandHandler.dispatch(new AppCommandEvent.close(_app));
+    _on._containerCommandHandler.dispatch(new AppCommandEvent.close(_session));
   }
   
   void appLoaded() {
-    _on._statusMessageHandler.dispatch(new AppStatusEvent.loaded(_app));
+    _on._statusMessageHandler.dispatch(new AppStatusEvent.loaded(_session));
   }
   
   void appSuspended() {
-    _on._containerCommandHandler.dispatch(new  AppCommandEvent.suspend(_app));
+    _on._containerCommandHandler.dispatch(new  AppCommandEvent.suspend(_session));
   }
   T get on() => _on;
 }

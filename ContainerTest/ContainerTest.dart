@@ -13,41 +13,50 @@ class ContainerTest {
   }
 
   void run() {
-    write("Run container tests");
     
-    test('test instantiation',() {
+    group ('contaner', () {
+      Application rulesApp = new Application('rules');
+      Application cpsApp = new Application('Cps');
       ContainerMessageBus eventBus = new ContainerMessageBus();
-      Expect.isNotNull(eventBus);
-    });
     
     test('load-app action ', () {
-      ContainerMessageBus eventBus = new ContainerMessageBus();
-      eventBus.on.appLoaded((appStatus) {
+      Expect.isNotNull(eventBus);
+      bool processed = false;
+      HandleRegistration handler = eventBus.on.appLoaded((AppStatusEvent appStatus) {
         Expect.isNotNull(appStatus);
         Expect.isNotNull(appStatus.topic);
         Expect.equals(AppStatus.LOADED, appStatus.topic);
-        Expect.isNotNull(appStatus.app);
-        Expect.isNotNull(appStatus.app.name);
-        Expect.equals('rules', appStatus.app.name);
-      });
-      
-      eventBus.appLoaded(new Application('rules'));
+        Expect.isNotNull(appStatus.session.app);
+        Expect.isNotNull(appStatus.session.app.name);
+        Expect.equals('rules', appStatus.session.app.name);
+        processed = true;
+      }).handlerRegistration;
+      AppSession session = new AppSession('unu', rulesApp);
+      eventBus.appLoaded(session);
+      handler.remove();
+      Expect.isTrue(processed);
     });
     
     
     
     test('start-app action ', () {
-      ContainerMessageBus eventBus = new ContainerMessageBus();
-      eventBus.on.appStartRequest((appEvent){
+      Expect.isNotNull(eventBus);
+      bool processed = false;
+      HandleRegistration handle = eventBus.on.appStartRequest((appEvent){
         Expect.isTrue(appEvent is AppCommandEvent);
         Expect.isNotNull(appEvent);
         Expect.isNotNull(appEvent.topic);
         Expect.equals(AppAction.START, appEvent.topic); 
-        Expect.isNotNull(appEvent.app);
-        Expect.isNotNull(appEvent.app.name);
-        Expect.equals('Cps', appEvent.app.name);
-      });
-      eventBus.requestAppStart(new Application('Cps'));
+        Expect.isNotNull(appEvent.session.app);
+        Expect.isNotNull(appEvent.session.app.name);
+        Expect.equals('Cps', appEvent.session.app.name);
+        processed = true;
+      }).handlerRegistration;
+      AppSession session = new AppSession('doi', cpsApp);
+      eventBus.appStartRequested(session);
+      Expect.isTrue(processed);
+      handle.remove();
+    });
     });
     
     
@@ -87,30 +96,34 @@ class ContainerTest {
     });
     
     group('handler registration', () {
+      Application rulesApp = new Application('rules');
+      ContainerMessageBus eventBus = new ContainerMessageBus();
+      
       test('obtain handler registration', () {
-        ContainerMessageBus eventBus = new ContainerMessageBus();
+        Expect.isNotNull(eventBus);  
         eventBus.on.appCloseRequest((event){
           Expect.isNotNull(event);    
         });
         
         Expect.isNotNull(eventBus.on.handlerRegistration);
-        eventBus.requestAppClose(new Application('rules'));
+        AppSession session = new AppSession('unu', rulesApp);
+        eventBus.requestAppClose(session);
       });
       
      test('remove handler', () {
-       ContainerMessageBus eventBus = new ContainerMessageBus();
+       Expect.isNotNull(eventBus);
        bool received = false;
        HandleRegistration registration = eventBus.on.appCloseRequest((even ) {
          received = true;
        }).handlerRegistration;
        
       registration.remove();
-       eventBus.requestAppClose(new Application('Rules'));
+       eventBus.requestAppClose(new AppSession('unu', rulesApp));
        Expect.isFalse(received);   
      }); 
      
      test('test multiple handlers ', () {
-      ContainerMessageBus eventBus = new ContainerMessageBus();
+      Expect.isNotNull(eventBus);
       int eventCount = 0;
       HandleRegistration appLoadedHandlerregistration = eventBus.on.appLoaded((event) {
         Expect.isNotNull(event);
@@ -123,20 +136,20 @@ class ContainerTest {
       }).handlerRegistration;
       
       
-      eventBus.appLoaded(new Application('rules'));
-      eventBus.requestAppStart(new Application('admin'));
+      eventBus.appLoaded(new AppSession('unu', rulesApp));
+      eventBus.appStartRequested(new AppSession('doi', new Application('admin')) );
       
       Expect.equals(2, eventCount);
-      eventBus.appLoaded(new Application('roles'));
+      eventBus.appLoaded(new AppSession ('trei', new Application('roles')));
       Expect.equals(3, eventCount);
       appLoadedHandlerregistration.remove();
-      eventBus.appLoaded(new Application('users'));
+      eventBus.appLoaded(new AppSession('patru', new Application('users')));
       Expect.equals(3, eventCount);
       
-      eventBus.requestAppStart(new Application('pricing'));
+      eventBus.appStartRequested(new AppSession('cinci', new Application('pricing')));
       Expect.equals(4, eventCount);
       appStartRequestHandler.remove();
-      eventBus.requestAppStart(new Application('pricing'));
+      eventBus.appStartRequested(new AppSession ('sase', new Application('pricing')));
       Expect.equals(4, eventCount);
       
      });

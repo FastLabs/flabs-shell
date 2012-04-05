@@ -3,17 +3,22 @@ class AppMessengerTest {
   void run() {
     group('messenger test', () {
       Application app = new Application('Admin');
-      SimpleGadgetEventBus eventBus = new SimpleGadgetEventBus(app);
+      AppSession session = new AppSession('unu', app);
+      SimpleGadgetEventBus eventBus = new SimpleGadgetEventBus(session);
       ContainerMessageBus containerMessageBus = new ContainerMessageBus();
       ApplicationRepository repository = new ApplicationRepository();
       repository.add(new Application('rules'));
       repository.add(new Application('admin'));
-      SimpleMessenger messenger = new SimpleMessenger(repository, containerMessageBus);
+      SessionManager sessionManager = new SessionManager(containerMessageBus);
+      ApplicationManager appManager = new ApplicationManager(containerMessageBus, sessionManager);
+      SimpleMessenger messenger = new SimpleMessenger(sessionManager, containerMessageBus);
       GadgetMessageProcessor <SimpleGadgetEvents> messageHandler = new GadgetMessageProcessor(eventBus, messenger); 
      
       test('receiving resume message', () {
+        
         bool processed = false;
-        eventBus.on.resumeAppRequest((handler) {
+        eventBus.on.resumeAppRequest((AppCommandEvent ev) {
+          Expect.isTrue(ev is AppCommandEvent);
           print('resume requested');
           processed = true;
         });
@@ -25,7 +30,8 @@ class AppMessengerTest {
       
       test('receiving suspend message', (){
         bool processed = false;
-        eventBus.on.suspendAppRequest((handler){
+        eventBus.on.suspendAppRequest((AppCommandEvent ev){
+          Expect.isTrue(ev is AppCommandEvent);
           print('suspend requested');
           processed = true;
         });
@@ -36,13 +42,16 @@ class AppMessengerTest {
       });
       
       test('send loaded message to container', () {
+        appManager.startAppInstance(new Application('rules'));
         bool processed = false;
-        containerMessageBus.on.appLoaded((handler){
-          Expect.equals('rules', handler.app.name);
+        containerMessageBus.on.appLoaded((AppStatusEvent ev){
+          print('------------- ${ev.session.app.name}');
+          Expect.isTrue(ev is AppStatusEvent);
+          Expect.equals('rules', ev.session.app.name);
           processed = true;
         });
         
-       messenger.sendContainerMessage('{"name":"rules", "status":"loaded" }');
+       messenger.sendContainerMessage('{"session":"rules-0", "app":"rules", "status":"loaded" }');
        Expect.isTrue(processed);
       });
       

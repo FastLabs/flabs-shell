@@ -11,11 +11,11 @@ class SessionManagerTest {
      Application app = new Application('Admin');
      ContainerMessageBus _messageBus = new ContainerMessageBus();
      AppContainerView _view = new MockView();
-     SessionManager _sessionManager = new SessionManager(_messageBus, _view);
-     ApplicationManager _manager = new ApplicationManager(_messageBus);
+     SessionManager _sessionManager = new SessionManager(_messageBus);
+     ApplicationManager _manager = new ApplicationManager(_messageBus, _sessionManager);
      
      test('simple session', () {
-       _manager.startApp(app);
+       _manager.startAppInstance(app);
        List<AppSession> sessions = _sessionManager.getSessions(app.name);
        Expect.isNotNull(sessions);
        Expect.equals(1, sessions.length);

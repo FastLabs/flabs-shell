@@ -76,8 +76,8 @@ class ContainerMessageBus {
   
   ContainerMessageBus() : this._on = new ContainerEvents();
   
-  void appLoaded(Application app) {
-    _on._statusHandlers.dispatch(new AppStatusEvent.loaded(app));
+  void appLoaded(AppSession session) {
+    _on._statusHandlers.dispatch(new AppStatusEvent.loaded(session));
       
   }
   
@@ -89,13 +89,13 @@ class ContainerMessageBus {
     _on._routingHandlers.dispatch(new RouteMessageEvent(from, to, payload));
   }
   
-  void requestAppStart(Application app) {
-    _on._actionHandlers.dispatch(new AppCommandEvent.start(app));
+  void appStartRequested(AppSession session) {
+    _on._actionHandlers.dispatch(new AppCommandEvent.start(session));
   }
   
-  void requestAppClose(Application app) {
+  void requestAppClose(AppSession session) {
     //TODO: here i must be able to do: const AppCommandEvent.close(app)
-    _on._actionHandlers.dispatch(new AppCommandEvent.close(app));
+    _on._actionHandlers.dispatch(new AppCommandEvent.close(session));
   } 
   
   ContainerEvents get on() =>_on;
@@ -107,20 +107,30 @@ hadnles the low level comunication only related to messages send via window.post
 */
 class ContainerMessageProcessor extends MessageProcessor {
   ContainerMessageBus _containerMessageBus;
-  ApplicationRepository _repository;
+  SessionManager _sessionManager;
   
   
-  ContainerMessageProcessor(ApplicationRepository this._repository, ContainerMessageBus this._containerMessageBus) {
+  ContainerMessageProcessor(SessionManager this._sessionManager, ContainerMessageBus this._containerMessageBus) {
     //here should be defined the handlers that will send messages to applications such as : init, route...
     //_containerMessageBus.on.appLoaded(handler)
   }
-  
+  //TODO: optimize this
   void handle(Map message) {
+    
     var status = message['status'];
-    var app = _repository[message['name']];
-    if(app != null && status != null ) {
+    var sessionId = message['session'];
+    List <AppSession> sessions = _sessionManager.getSessions(message["app"]);
+    AppSession appS = null;
+    
+    for(AppSession appSession in sessions) {
+      if(appSession.id == sessionId) {
+        appS = appSession;
+      }
+    }    
+    
+    if(appS != null && status != null ) {
       switch(status) {
-        case AppStatus.LOADED: _containerMessageBus.appLoaded(app); break;
+        case AppStatus.LOADED: _containerMessageBus.appLoaded(appS); break;
         case AppStatus.PROCESSED: break;
         case AppStatus.LOADING: break;
       }
@@ -128,7 +138,7 @@ class ContainerMessageProcessor extends MessageProcessor {
     }
     var action = message['action'];
     switch (action) {
-      case AppAction.ROUTE : _route(app, message); break;
+      case AppAction.ROUTE : _route(appS, message); break;
     }
   }
   
@@ -136,16 +146,17 @@ class ContainerMessageProcessor extends MessageProcessor {
   * routes the message from a application to another
   
   */
-   void _route(Application fromApp, Map message) {
+   void _route(AppSession fromApp, Map message) {
     var destination = message['destination'];
     if(destination != null) {
-      var destApp = _repository[message[destination]];
+      throw 'to be implemented';
+     /* var destApp = _repository[message[destination]];
       var payload = message['payload'];
       if(destApp != null) {
         _containerMessageBus.routeMessage(fromApp, destApp, payload);
       } else {
         throw 'Application ${destination} is unavailable in repository';
-      }
+      }*/
     }
   }
 }

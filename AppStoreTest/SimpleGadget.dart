@@ -18,7 +18,7 @@ class SimpleGadgetEvents extends GadgetEvents <SimpleMessageEvent> {
 //gadget event bus
 class SimpleGadgetEventBus extends GadgetEventBus<SimpleGadgetEvents> {
   
-  SimpleGadgetEventBus(Application app):super(new SimpleGadgetEvents(), app);
+  SimpleGadgetEventBus(AppSession appSession):super(new SimpleGadgetEvents(), appSession);
   
   void dispatchMessage(SimpleMessageEvent message) {
     on._simpleMessageHandlers.dispatch(message);
@@ -32,8 +32,8 @@ class SimpleMessenger implements Messenger {
   
   ContainerMessageProcessor _containerMessageHandler;
   
-  SimpleMessenger(ApplicationRepository repository, ContainerMessageBus containerMessageBus):
-    this._containerMessageHandler = new ContainerMessageProcessor(repository ,containerMessageBus);
+  SimpleMessenger(SessionManager sessionManager, ContainerMessageBus containerMessageBus):
+    this._containerMessageHandler = new ContainerMessageProcessor(sessionManager ,containerMessageBus);
   
   
   void sendAppMessage(String destination) {

@@ -47,7 +47,7 @@ class AppSession {
   
   AppSession(this._sessionId, this._app);
   
-  String get sessionId () => _sessionId;
+  String get id () => _sessionId;
   Application get app () => _app;
   
 }
@@ -228,35 +228,35 @@ class AppMessageBroadcaster <T> implements MessageBroadcaster<T>{
 //TODO: separate the status messages from the command messages
 class AppStatusEvent extends ContainerEvent <String>{
   
-  final Application _app;
+  final AppSession _session;
   
-  const AppStatusEvent.loaded(Application this._app): super(AppStatus.LOADED);
-  const AppStatusEvent.loading(Application this._app): super(AppStatus.LOADING);
-  const AppStatusEvent.processed(Application this._app): super(AppStatus.PROCESSED);
+  const AppStatusEvent.loaded(AppSession this._session): super(AppStatus.LOADED);
+  const AppStatusEvent.loading(AppSession this._session): super(AppStatus.LOADING);
+  const AppStatusEvent.processed(AppSession this._session): super(AppStatus.PROCESSED);
   
-  Application get app() => _app;
+  AppSession get session() => _session;
   String get status() => topic;
+  
   Map fields() {
     Map data = {};
-    data['app'] = app.name; 
+    data['app'] = session.app.name; 
     data['status'] = status;
     return data;
   }
 }
 
 
-//TODO: this event is for app session 
+
 class AppCommandEvent extends ContainerEvent<String> {
-  
-  final Application _app;
-  const AppCommandEvent.suspend(Application this._app): super(AppAction.SUSPEND);
-  const AppCommandEvent.resume(Application this._app): super(AppAction.RESUME);
-  const AppCommandEvent.init(Application this._app): super(AppAction.INIT);
-  const AppCommandEvent.start(Application this._app): super(AppAction.START);
-  const AppCommandEvent.close(Application this._app): super(AppAction.CLOSE);
+  final AppSession _session;
+  const AppCommandEvent.suspend(AppSession this._session): super(AppAction.SUSPEND);
+  const AppCommandEvent.resume(AppSession this._session): super(AppAction.RESUME);
+  const AppCommandEvent.init(AppSession this._session): super(AppAction.INIT);
+  const AppCommandEvent.start(AppSession this._session): super(AppAction.START);
+  const AppCommandEvent.close(AppSession this._session): super(AppAction.CLOSE);
   
   String get command() => topic;
-  Application get app() => _app;
+  AppSession get session() => _session;
 }
 
 /**A message that contain routing information*/

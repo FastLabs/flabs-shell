@@ -12,8 +12,10 @@ class ContainerView implements AppContainerView {
 
   ContainerView():
     _messageBus = new ContainerMessageBus() {
-    _appManager = new ApplicationManager(_messageBus);
-    _sessionManager = new SessionManager(_messageBus, this);
+    _sessionManager = new SessionManager(_messageBus);
+    _messageBus.on.appStartRequest((ev)=>openApp(ev.session.app));
+    _appManager = new ApplicationManager(_messageBus, _sessionManager);
+    
    }
 
   void openApp(AppSession session) {
@@ -21,8 +23,8 @@ class ContainerView implements AppContainerView {
   }
 
   void run() {
-    Application app = new Application('Rules');
-    _messageBus.requestAppStart(app);
+    //Application app = new Application('Rules');
+    ///_messageBus.requestAppStart(app);
   }
 
   void write(String message) {
