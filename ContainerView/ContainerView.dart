@@ -2,16 +2,21 @@
 #import('../Container/Container.dart');
 #import('../AppStore/Application.dart');
 
-class ContainerView {
+class ContainerView implements AppContainerView {
   
   ContainerMessageBus _messageBus;
   ApplicationRepository _appRepository;
+  ApplicationManager _appManager;
+  SessionManager _sessionManager;
 
   ContainerView():
     _messageBus = new ContainerMessageBus() {
-    _messageBus.on.appStartRequest((AppStatusEvent event) {
-      write('Application started: ${event.app.name}');
-    });
+    _appManager = new ApplicationManager(_messageBus);
+    _sessionManager = new SessionManager(_messageBus, this);
+   }
+
+  void openApp(Application app) {
+    
   }
 
   void run() {

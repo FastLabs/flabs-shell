@@ -10,12 +10,12 @@ interface ManagesApplications default ApplicationManager {
 
 class SessionManager {
   ContainerMessageBus _containerMessageBus;
+  AppContainerView _view;
   
-  SessionManager(ContainerMessageBus this._containerMessageBus) {
-    
-    _containerMessageBus.on.appStartRequest((ContainerEvent event) {
-      event.
-    });
+  SessionManager(ContainerMessageBus this._containerMessageBus, AppContainerView this._view) {
+    _containerMessageBus.on.appStartRequest((AppCommandEvent event) {
+        this._view.openApp(event.app);
+      });
     }
 }
 
@@ -28,8 +28,8 @@ class ApplicationManager {
     _containerMessageBus.requestAppStart(app);
   }
   
-  void closeApplication(Application application) {
-    print('application ${application.name} stoped');
+  void closeApplication(Application app) {
+    _containerMessageBus.requestAppClose(app);
   }
   
   AppStatus queryAppStatus(Application application) {

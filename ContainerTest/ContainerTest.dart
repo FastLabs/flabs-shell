@@ -4,6 +4,8 @@
 #import('../Container/Container.dart');
 #import('../AppStore/Application.dart');
 #import('../commons/Commons.dart');
+#source('AppManagerTest.dart');
+
 class ContainerTest {
 
   ContainerTest() {
@@ -23,9 +25,9 @@ class ContainerTest {
         Expect.isNotNull(appStatus);
         Expect.isNotNull(appStatus.topic);
         Expect.equals(AppStatus.LOADED, appStatus.topic);
-        Expect.isNotNull(appStatus.application);
-        Expect.isNotNull(appStatus.application.name);
-        Expect.equals('rules', appStatus.application.name);
+        Expect.isNotNull(appStatus.app);
+        Expect.isNotNull(appStatus.app.name);
+        Expect.equals('rules', appStatus.app.name);
       });
       
       eventBus.appLoaded(new Application('rules'));
@@ -40,9 +42,9 @@ class ContainerTest {
         Expect.isNotNull(appEvent);
         Expect.isNotNull(appEvent.topic);
         Expect.equals(AppAction.START, appEvent.topic); 
-        Expect.isNotNull(appEvent.application);
-        Expect.isNotNull(appEvent.application.name);
-        Expect.equals('Cps', appEvent.application.name);
+        Expect.isNotNull(appEvent.app);
+        Expect.isNotNull(appEvent.app.name);
+        Expect.equals('Cps', appEvent.app.name);
       });
       eventBus.requestAppStart(new Application('Cps'));
     });
@@ -173,5 +175,6 @@ class ContainerTest {
 
 void main() {
   new ContainerTest().run();
+  new AppManagerTest().run();
   new DARTest().run();
 }

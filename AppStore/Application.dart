@@ -87,7 +87,7 @@ interface AppStatus  {
   static final String PROCESSED = 'processed';
   static final String ERROR = 'error';
 }
-
+//TODO: remove this
 class AppEventBus {
   
   void loading() {

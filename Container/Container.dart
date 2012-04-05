@@ -3,6 +3,9 @@
 #import('../commons/Commons.dart');
 #import('../commons/Messenger.dart');
 #source('AppManager.dart');
+#source('ContainerView.dart');
+
+typedef AppCommandHandler(AppCommandEvent event);
 typedef AppEventHandler(ContainerEvent event);
 typedef AppRouteHandler(RouteMessageEvent event);
 typedef AppRepositoryHandler(AppRepositoryEvent event);
@@ -31,7 +34,7 @@ class AppRepositoryEvent extends ContainerEvent<String> {
 Encapsulates the events related to application container
 */
 class ContainerEvents {
-  TopicHandler<String, AppEventHandler> _actionHandlers;
+  TopicHandler<String, AppCommandHandler> _actionHandlers;
   TopicHandler<String, AppEventHandler> _statusHandlers;
   TopicHandler<String, AppRouteHandler> _routingHandlers;
   TopicHandler<String, AppRepositoryHandler> _appRepoHandler;
@@ -56,12 +59,12 @@ class ContainerEvents {
     return this;
   }
   
-  ContainerEvents appStartRequest(AppEventHandler handler) {
+  ContainerEvents appStartRequest(AppCommandHandler handler) {
     this.handlerRegistration =_actionHandlers.add(AppAction.START, handler);
     return this;
   }
   
-  ContainerEvents appCloseRequest(AppEventHandler handler) {
+  ContainerEvents appCloseRequest(AppCommandHandler handler) {
     this.handlerRegistration = _actionHandlers.add(AppAction.CLOSE, handler);
     return this;
   }
@@ -87,11 +90,12 @@ class ContainerMessageBus {
   }
   
   void requestAppStart(Application app) {
-    _on._actionHandlers.dispatch(const AppCommandEvent.start(app));
+    _on._actionHandlers.dispatch(new AppCommandEvent.start(app));
   }
   
   void requestAppClose(Application app) {
-    _on._actionHandlers.dispatch(const AppCommandEvent.close(app));
+    //TODO: here i must be able to do: const AppCommandEvent.close(app)
+    _on._actionHandlers.dispatch(new AppCommandEvent.close(app));
   } 
   
   ContainerEvents get on() =>_on;
