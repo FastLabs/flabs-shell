@@ -1,0 +1,7 @@
+class GadgetView {
+  
+  AppSession session;
+  
+  
+  
+}

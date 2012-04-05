@@ -7,18 +7,6 @@ interface ManagesApplications default ApplicationManager {
   AppStatus queryAppStatus(Application application);
 }
 
-class AppSession {
-  String _sessionId;
-  Application _app;
-  
-  AppSession(this._sessionId, this._app);
-  
-  String get sessionId () => _sessionId;
-  Application get app () => _app;
-  
-}
-
-
 class SessionManager {
   ContainerMessageBus _containerMessageBus;
   AppContainerView _view;
@@ -28,10 +16,8 @@ class SessionManager {
   SessionManager(ContainerMessageBus this._containerMessageBus, AppContainerView this._view): _sessions = {} {
     
     _containerMessageBus.on.appStartRequest((AppCommandEvent event) {
-      
-      _registerAppSession(event.app);
-      
-        this._view.openApp(event.app);
+      AppSession session = _registerAppSession(event.app);
+        this._view.openApp(session);
       });
     }
   
@@ -39,7 +25,7 @@ class SessionManager {
     return _sessions[appId];
   }
   
-  void _registerAppSession(Application app) {
+  AppSession _registerAppSession(Application app) {
     var appSessions = _sessions[app.name];
     if(appSessions == null) {
       appSessions = [];
@@ -48,6 +34,7 @@ class SessionManager {
     int position = appSessions.length;
     var session = new AppSession('${app.name}-${position}', app);
     appSessions.add(session);
+    return session;
   }
 }
 
@@ -55,13 +42,15 @@ class SessionManager {
 class ApplicationManager {
   ContainerMessageBus _containerMessageBus;
   
-  ApplicationManager(ContainerMessageBus this._containerMessageBus);
+  ApplicationManager(ContainerMessageBus this._containerMessageBus);  
   
-  void startApp(Application app) {
+  void startAppInstance(Application app) {
     _containerMessageBus.requestAppStart(app);
   }
   
-  void closeApp(Application app) {
-    _containerMessageBus.requestAppClose(app);
+  
+  void closeAppInstance(AppSession appInstance) {
+    
+    //_containerMessageBus.requestAppClose(app);
   }
 }

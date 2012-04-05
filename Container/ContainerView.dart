@@ -1,4 +1,4 @@
 interface AppContainerView {
-  void openApp(Application app);
+  void openApp(AppSession session);
 }
 

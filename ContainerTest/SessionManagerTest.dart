@@ -1,6 +1,6 @@
 class MockView implements AppContainerView {
-  void openApp(Application app) {
-    print('${app.name} loaded');
+  void openApp(AppSession session) {
+    print('${session.app.name} loaded');
   }
 }
 

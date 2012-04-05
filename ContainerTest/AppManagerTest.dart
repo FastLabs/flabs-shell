@@ -1,5 +1,5 @@
 class MockContainerView implements AppContainerView{
-  void openApp(Application app) {
+  void openApp(AppSession app) {
     
   }
 }

@@ -1,6 +1,7 @@
 #import('dart:html');
 #import('../Container/Container.dart');
 #import('../AppStore/Application.dart');
+#source('GadgetView.dart');
 
 class ContainerView implements AppContainerView {
   
@@ -15,7 +16,7 @@ class ContainerView implements AppContainerView {
     _sessionManager = new SessionManager(_messageBus, this);
    }
 
-  void openApp(Application app) {
+  void openApp(AppSession session) {
     
   }
 

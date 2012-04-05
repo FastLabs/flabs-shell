@@ -41,6 +41,18 @@ class Application implements Taggable <String> {
 }
 
 
+class AppSession {
+  String _sessionId;
+  Application _app;
+  
+  AppSession(this._sessionId, this._app);
+  
+  String get sessionId () => _sessionId;
+  Application get app () => _app;
+  
+}
+
+
 
 
 //TODO: must decide if the launcher is only url related or is the
@@ -232,6 +244,8 @@ class AppStatusEvent extends ContainerEvent <String>{
   }
 }
 
+
+//TODO: this event is for app session 
 class AppCommandEvent extends ContainerEvent<String> {
   
   final Application _app;
