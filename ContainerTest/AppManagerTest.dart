@@ -22,7 +22,7 @@ class AppManagerTest {
           Expect.equals('Admin', event.app.name);
           processed = true;
         });
-        _appManager.startApplication(app);
+        _appManager.startApp(app);
         Expect.isTrue(processed);
       });
       
@@ -38,7 +38,7 @@ class AppManagerTest {
           processed= true;
         });
         
-        _appManager.closeApplication(app);
+        _appManager.closeApp(app);
         Expect.isTrue(processed);
       });
     });

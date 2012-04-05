@@ -5,6 +5,7 @@
 #import('../AppStore/Application.dart');
 #import('../commons/Commons.dart');
 #source('AppManagerTest.dart');
+#source('SessionManagerTest.dart');
 
 class ContainerTest {
 
@@ -176,5 +177,6 @@ class ContainerTest {
 void main() {
   new ContainerTest().run();
   new AppManagerTest().run();
+  new SessionManagerTest().run();
   new DARTest().run();
 }
