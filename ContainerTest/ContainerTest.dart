@@ -153,6 +153,12 @@ class ContainerTest {
       Expect.equals(4, eventCount);
       
      });
+     
+     test('test resume application', () {
+       Expect.isNotNull(eventBus);
+       //eventBus.on.
+       eventBus.requestAppResume(session, select);
+     });
       
       
     });

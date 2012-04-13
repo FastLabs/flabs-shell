@@ -5,7 +5,7 @@
 #source('AppManager.dart');
 #source('ContainerView.dart');
 
-typedef AppCommandHandler(AppCommandEvent event);
+typedef AppCommandHandler(AppCommandEvent event, [var parameter]);
 typedef AppEventHandler(ContainerEvent event);
 typedef AppRouteHandler(RouteMessageEvent event);
 typedef AppRepositoryHandler(AppRepositoryEvent event);
@@ -96,7 +96,12 @@ class ContainerMessageBus {
   void requestAppClose(AppSession session) {
     //TODO: here i must be able to do: const AppCommandEvent.close(app)
     _on._actionHandlers.dispatch(new AppCommandEvent.close(session));
-  } 
+  }
+  
+  void requestAppResume(AppSession session, bool select) {
+    _on._actionHandlers.dispatch(new AppCommandEvent.resume(session), select);
+    
+  }
   
   ContainerEvents get on() =>_on;
 }

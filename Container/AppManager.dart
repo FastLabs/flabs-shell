@@ -37,7 +37,7 @@ class SessionManager {
   }
 }
 
-//TODO: application should work with app session so to close an applicaiton i must have session information
+
 class ApplicationManager {
   ContainerMessageBus _containerMessageBus;
   SessionManager _sessionManager;
@@ -51,5 +51,9 @@ class ApplicationManager {
   
   void closeAppInstance(AppSession appInstance) {
     _containerMessageBus.requestAppClose(appInstance);
+  }
+  
+  void activateSession(AppSession appInstance) {
+    
   }
 }

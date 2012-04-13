@@ -140,12 +140,16 @@ class TopicHandler <K extends Hashable, T extends Function> {
   
   TopicHandler(): this._topics = new Map();
   
-  void dispatch(TopicEvent<K>  event) {
+  void dispatch(TopicEvent<K>  event, [var parameter = null]) {
     final handlers = _topics[event.topic];
     
     if(handlers != null) {
       for(T listener in handlers) {
-        listener(event);
+        if(parameter != null) {
+          listener(event, parameter);
+        } else {
+          listener(event);
+        }
       }
     }
   }
