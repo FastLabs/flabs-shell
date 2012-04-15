@@ -11,6 +11,14 @@ class ContainerTest {
 
   ContainerTest() {
   }
+  
+  void _commandIs(AppCommandEvent event, String status) {
+    Expect.isNotNull(event);
+    Expect.isNotNull(event.session);
+    Expect.isNotNull(event.session.app);
+    Expect.isNotNull(event.command);
+    Expect.equals(event.command, status);
+  }
 
   void run() {
     
@@ -45,6 +53,7 @@ class ContainerTest {
       HandleRegistration handle = eventBus.on.appStartRequest((appEvent){
         Expect.isTrue(appEvent is AppCommandEvent);
         Expect.isNotNull(appEvent);
+        
         Expect.isNotNull(appEvent.topic);
         Expect.equals(AppAction.START, appEvent.topic); 
         Expect.isNotNull(appEvent.session.app);
@@ -98,12 +107,16 @@ class ContainerTest {
       bool processed = false;
       HandleRegistration handler = eventBus.on.appSuspendRequest((AppCommandEvent event) {
         processed = true;  
+        _commandIs(event, AppAction.SUSPEND);
+        Expect.equals(event.session.app.name, 'rules');
+        
       }).handlerRegistration;
       
       eventBus.requestAppSuspend(session);
       Expect.isTrue(processed);
       
     });
+    
     });
     
     
