@@ -14,7 +14,7 @@ class ContainerTest {
 
   void run() {
     
-    group ('contaner', () {
+    group ('contaner messaging', () {
       Application rulesApp = new Application('rules');
       Application cpsApp = new Application('Cps');
       ContainerMessageBus eventBus = new ContainerMessageBus();
@@ -56,6 +56,53 @@ class ContainerTest {
       eventBus.appStartRequested(session);
       Expect.isTrue(processed);
       handle.remove();
+    });
+    
+    test('resume application with view activation', () {
+      Expect.isNotNull(eventBus);
+      AppSession session = new AppSession('sapte', rulesApp);
+      bool processed = false;
+      HandleRegistration handler = eventBus.on.appResumeRequest((AppCommandEvent event, [var parameter = false]) {
+        processed = true;
+        Expect.isTrue(parameter);
+        Expect.isNotNull(event);
+        Expect.isNotNull(event.session);
+        Expect.isNotNull(event.session.app);
+        Expect.equals('rules', event.session.app.name);
+      }).handlerRegistration;
+      
+      eventBus.requestAppResume(session, true);
+      Expect.isTrue(processed);
+      handler.remove();
+      
+    });
+    
+    test('resume application without view activation', () {
+      Expect.isNotNull(eventBus);
+      AppSession session = new AppSession('opt', rulesApp);
+      bool processed = false;
+      
+      HandleRegistration handler = eventBus.on.appResumeRequest((AppCommandEvent event, [var parameter = false]) {
+        processed = true;
+        Expect.isFalse(parameter);
+        
+      }).handlerRegistration;
+      eventBus.requestAppResume(session, false);
+      Expect.isTrue(processed);
+      handler.remove();
+    });
+    
+    test('suspend application instance', () {
+      Expect.isNotNull(eventBus);
+      AppSession session = new AppSession('nine', rulesApp);
+      bool processed = false;
+      HandleRegistration handler = eventBus.on.appSuspendRequest((AppCommandEvent event) {
+        processed = true;  
+      }).handlerRegistration;
+      
+      eventBus.requestAppSuspend(session);
+      Expect.isTrue(processed);
+      
     });
     });
     
@@ -154,11 +201,7 @@ class ContainerTest {
       
      });
      
-     test('test resume application', () {
-       Expect.isNotNull(eventBus);
-       //eventBus.on.
-       eventBus.requestAppResume(session, select);
-     });
+     
       
       
     });

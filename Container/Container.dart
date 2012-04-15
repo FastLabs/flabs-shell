@@ -68,6 +68,16 @@ class ContainerEvents {
     this.handlerRegistration = _actionHandlers.add(AppAction.CLOSE, handler);
     return this;
   }
+  
+  ContainerEvents appResumeRequest(AppCommandHandler handler) {
+    this.handlerRegistration  = _actionHandlers.add(AppAction.RESUME, handler);
+    return this;
+  }
+  
+  ContainerEvents appSuspendRequest(AppCommandHandler handler) {
+    this.handlerRegistration = _actionHandlers.add(AppAction.SUSPEND, handler);
+    return this;
+  }
 }
 
 //TODO: probably I should rename this to Event bus as message is used to comunicate between windows and applications
@@ -100,6 +110,11 @@ class ContainerMessageBus {
   
   void requestAppResume(AppSession session, bool select) {
     _on._actionHandlers.dispatch(new AppCommandEvent.resume(session), select);
+    
+  }
+  
+  void requestAppSuspend(AppSession session) {
+    _on._actionHandlers.dispatch(new AppCommandEvent.suspend(session));
     
   }
   
