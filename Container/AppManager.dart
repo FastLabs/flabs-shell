@@ -42,7 +42,9 @@ class ApplicationManager {
   ContainerMessageBus _containerMessageBus;
   SessionManager _sessionManager;
   
-  ApplicationManager(ContainerMessageBus this._containerMessageBus, SessionManager this._sessionManager);  
+  ApplicationManager(ContainerMessageBus containerMessageBus) :
+    this._containerMessageBus = containerMessageBus,
+    this._sessionManager = new SessionManager(containerMessageBus);  
   
   void startAppInstance(Application app) {
     _containerMessageBus.appStartRequested(_sessionManager._registerAppSession(app));
@@ -56,4 +58,6 @@ class ApplicationManager {
   void activateSession(AppSession appInstance) {
     
   }
+  //TODO: this is temporar solution, check the messenger
+  SessionManager  get sessionManager () => _sessionManager;
 }

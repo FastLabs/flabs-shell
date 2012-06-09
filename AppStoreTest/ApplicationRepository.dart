@@ -64,7 +64,7 @@ class AppRepositoryTest {
     test('every application', () {
       ApplicationRepository repository = new ApplicationRepository.fromJson(data);
       Expect.isFalse(repository.isEmpty());
-      Expect.isTrue(repository.every((app)=>app is Application));      
+      Expect.isTrue(repository.every((app)=>app is Application));
     });
     
     test('map apps ', () {

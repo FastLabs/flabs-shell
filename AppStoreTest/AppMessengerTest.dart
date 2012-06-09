@@ -9,9 +9,9 @@ class AppMessengerTest {
       ApplicationRepository repository = new ApplicationRepository();
       repository.add(new Application('rules'));
       repository.add(new Application('admin'));
-      SessionManager sessionManager = new SessionManager(containerMessageBus);
-      ApplicationManager appManager = new ApplicationManager(containerMessageBus, sessionManager);
-      SimpleMessenger messenger = new SimpleMessenger(sessionManager, containerMessageBus);
+     // SessionManager sessionManager = new SessionManager(containerMessageBus);
+      ApplicationManager appManager = new ApplicationManager(containerMessageBus);
+      SimpleMessenger messenger = new SimpleMessenger(appManager.sessionManager, containerMessageBus);
       GadgetMessageProcessor <SimpleGadgetEvents> messageHandler = new GadgetMessageProcessor(eventBus, messenger); 
      
       test('receiving resume message', () {

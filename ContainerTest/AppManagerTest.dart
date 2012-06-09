@@ -10,8 +10,8 @@ class AppManagerTest {
     group('test application manager', () {
       Application app = new Application('Admin');  
       ContainerMessageBus _containerBus = new ContainerMessageBus();
-      SessionManager _sessionManager = new SessionManager(_containerBus);
-      ApplicationManager _appManager = new ApplicationManager(_containerBus, _sessionManager);
+      //SessionManager _sessionManager = new SessionManager(_containerBus);
+      ApplicationManager _appManager = new ApplicationManager(_containerBus);
       
       test('start application', () {
         bool processed = false;

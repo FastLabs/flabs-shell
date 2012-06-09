@@ -110,11 +110,9 @@ class ContainerTest {
         _commandIs(event, AppAction.SUSPEND);
         Expect.equals(event.session.app.name, 'rules');
         
-      }).handlerRegistration;
-      
+      }).handlerRegistration;      
       eventBus.requestAppSuspend(session);
       Expect.isTrue(processed);
-      
     });
     
     });
